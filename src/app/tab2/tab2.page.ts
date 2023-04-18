@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'app-tab2',
@@ -7,6 +8,12 @@ import { Component } from '@angular/core';
 })
 export class Tab2Page {
 
-  constructor() {}
+  constructor(private dataService: DataService) {
+    this.dataService.getNotes().subscribe(res => {
+      console.log(res);
+    }
+   )
+  }
 
 }
+

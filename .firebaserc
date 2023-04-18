@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "app-cards-23f24": {
+      "hosting": {
+        "app": [
+          "app-cards-23f24"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "app-cards-23f24"
+  }
+}
