@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Teste
+      Criar
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -13,5 +13,24 @@
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
 </ion-content>
+
+
+
+<ion-card class="card-container">
+    
+  <ion-card-header>
+    <ion-card-title>Nova carta</ion-card-title>
+
+  </ion-card-header>
+
+  <ion-card-content>
+
+    <ion-input [(ngModel)]="pergunta" label="pergunta" placeholder="pergunta"></ion-input>
+    <ion-input [(ngModel)]="resposta" label="resposta" placeholder="resposta"></ion-input>
+
+    <br>
+
+    <ion-button (click)="addCards()" [disabled]="false">Adicionar</ion-button>
+
+  </ion-card-content>

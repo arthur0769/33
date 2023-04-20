@@ -9,7 +9,7 @@ import { DataService } from '../services/data.service';
 export class Tab2Page {
 
   constructor(private dataService: DataService) {
-    this.dataService.getNotes().subscribe(res => {
+    this.dataService.getCards().subscribe(res => {
       console.log(res);
     }
    )
