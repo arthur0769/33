@@ -12,14 +12,18 @@ import { AlertController } from '@ionic/angular';
 
 export class Tab1Page {
 
-  pergunta: string
-  resposta: string
-
-    constructor(private dataService: DataService) {}
-
-    // openCards(cards){}
-
-    async addCards() {
-     this.dataService.addCards({ pergunta: this.pergunta, resposta: this.resposta });
-    }
-}
+  pergunta: string;
+  resposta: string;
+  
+  constructor(private dataService: DataService) {}
+  
+  async addCards() {
+    const hoje = new Date();
+    const novaCarta = {
+      pergunta: this.pergunta,
+      resposta: this.resposta,
+      data: `${hoje.getDate()}-${hoje.getMonth() + 1}-${hoje.getFullYear()}`
+    };
+    await this.dataService.addCards(novaCarta);
+  }
+} 
