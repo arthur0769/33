@@ -13,5 +13,16 @@
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 2 page"></app-explore-container> 
+  
+  <ion-card class="card">
+    <ion-card-header>
+      <ion-card-title>{{ currentCard.pergunta }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      {{ currentCard.resposta }}
+    </ion-card-content>
+  </ion-card>
+  <ion-button (click)="nextCard()">Próxima</ion-button>
+  
+  
 </ion-content>
