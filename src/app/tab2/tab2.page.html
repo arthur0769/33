@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 2
+      Estudar
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,20 +9,26 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
+      <ion-title size="large">Estudar</ion-title>
     </ion-toolbar>
   </ion-header>
 
   
-  <ion-card class="card">
-    <ion-card-header>
-      <ion-card-title>{{ currentCard.pergunta }}</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      {{ currentCard.resposta }}
-    </ion-card-content>
-  </ion-card>
-  <ion-button (click)="nextCard()">Próxima</ion-button>
+  <div class="stack">
+    <div class="card" *ngFor="let card of cardsEstudar; let i = index"
+         [ngClass]="{ 'active': card.id === currentCard?.id }"
+         [id]="card.id">
+      <div class="pergunta">{{ card.pergunta }}</div>
+      <div class="resposta-embacada" (click)="revelarResposta(currentCard.id)">{{ card.resposta }}</div>
+    </div>
+  </div>
+  
+    
+  <div class="buttons">
+    <ion-button (click)="marcarComoFacil()">Facil</ion-button>
+    <ion-button>Medio</ion-button>
+    <ion-button>Dificil</ion-button>
+  </div>
   
   
 </ion-content>
