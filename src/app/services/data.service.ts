@@ -1,14 +1,17 @@
 import { Injectable } from "@angular/core";
-import { Firestore, collectionData, addDoc, setDoc, doc } from "@angular/fire/firestore";
-import { ProviderId } from "firebase/auth";
-import { and, collection } from "firebase/firestore";
+import { Firestore, collectionData, addDoc, setDoc, doc, getDocs, getDoc } from "@angular/fire/firestore";
+import { DocumentSnapshot, and, collection } from "firebase/firestore";
 import { query, where } from 'firebase/firestore';
+import { map } from 'rxjs/operators';
+import { Observable, from } from "rxjs";
+
+
 
 export interface Cards {
     id?: string;
-    pergunta: string
-    resposta: string
-    data: string
+    pergunta: string;
+    resposta: string;
+    data: any;
 }
 
 @Injectable({
@@ -16,8 +19,12 @@ export interface Cards {
 })
 
 export class DataService {
+    db: any
 
-    constructor(private firestore: Firestore) {}
+    constructor(private firestore: Firestore) {
+        this.db = firestore;
+    }
+    
 
     getCards() {
         const cardsRef = collection(this.firestore, 'cards');
@@ -25,29 +32,30 @@ export class DataService {
     }
 
     getCardsHoje() {
+        const agora = new Date();
+        const inicioDoDia = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+        const fimDoDia = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate() + 1);
         const cardsRef = collection(this.firestore, 'cards');
-        const hoje = new Date();
-        const data = `${hoje.getDate()}-${hoje.getMonth() + 1}-${hoje.getFullYear()}`;
-        const q = query(cardsRef, where('data', '==', data));
-        return collectionData(q);
-    }
+        const queryRef = query(cardsRef, where('data', '>=', inicioDoDia), where('data', '<', fimDoDia));
+        return collectionData(queryRef, {idField: 'id'}).pipe(
+          map(cards => cards as {id: string, data: Cards}[])
+        );
+      }          
+    
 
     addCards(cards: Cards) {
         const cardsRef = collection(this.firestore, 'cards');
         return addDoc(cardsRef, cards);
     }
 
-    atualizarCard(id: string, novasInformacoes: Cards) {
-        if (!novasInformacoes || !novasInformacoes.pergunta) {
-          console.error('As novas informações estão vazias ou nulas!');
-          return null;
-        }
-        const cardsRef = doc(this.firestore, 'cards', id);
-        return setDoc(cardsRef, novasInformacoes, { merge: true });
-      }
       
-      
-      
-
+    updateCardData(id: string, oldData: any, dias: number): Observable<any> {
+        const novaData = new Date(oldData.seconds * 1000 + oldData.nanoseconds / 1000000);
+        novaData.setDate(novaData.getDate() + dias);
+    
+        const cardRef = doc(this.firestore, 'cards', id);
+        return from(setDoc(cardRef, { data: novaData }, { merge: true }));
+}
+  
 
 }

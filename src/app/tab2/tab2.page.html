@@ -13,22 +13,20 @@
     </ion-toolbar>
   </ion-header>
 
+
+  <ion-card *ngIf="cardsEstudar[currentIndex]">
+    <ion-card-header>
+      <ion-card-title>{{ cardsEstudar[currentIndex]?.pergunta }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      {{ cardsEstudar[currentIndex]?.resposta }}
+    </ion-card-content>
+  </ion-card>
   
-  <div class="stack">
-    <div class="card" *ngFor="let card of cardsEstudar; let i = index"
-         [ngClass]="{ 'active': card.id === currentCard?.id }"
-         [id]="card.id">
-      <div class="pergunta">{{ card.pergunta }}</div>
-      <div class="resposta-embacada" (click)="revelarResposta(currentCard.id)">{{ card.resposta }}</div>
-    </div>
+
+  <div class="nav-buttons">
+    <ion-button (click)="adicionar5Dias()">Facil</ion-button>
+    <ion-button (click)="adicionar3Dias()">Medio</ion-button>
+    <ion-button (click)="adicionar1Dia()">Dificil</ion-button>
   </div>
-  
-    
-  <div class="buttons">
-    <ion-button (click)="marcarComoFacil()">Facil</ion-button>
-    <ion-button>Medio</ion-button>
-    <ion-button>Dificil</ion-button>
-  </div>
-  
-  
 </ion-content>

@@ -22,8 +22,9 @@ export class Tab1Page {
     const novaCarta = {
       pergunta: this.pergunta,
       resposta: this.resposta,
-      data: `${hoje.getDate()}-${hoje.getMonth() + 1}-${hoje.getFullYear()}`
+      data: hoje
     };
     await this.dataService.addCards(novaCarta);
   }
+  
 } 
