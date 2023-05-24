@@ -13,21 +13,22 @@ export class Tab2Page {
   
   constructor(private dataService: DataService) {}
 
-  ngOnInit() {
+  private refreshCards() {
     this.dataService.getCardsHoje().subscribe((cards: {id: string, data: Cards}[]) => {
       this.cardsEstudar = cards;
       if (this.cardsEstudar.length > 0) {
         this.currentIndex = 0;
       }
     });
+  }  
+
+  ngOnInit() {
+    this.refreshCards();
   }
   
-
   public get currentCard() {
     return this.cardsEstudar[this.currentIndex];
   }
-  
-
   
     adicionar5Dias() {
       const currentCard = this.cardsEstudar[this.currentIndex];
@@ -36,10 +37,7 @@ export class Tab2Page {
           const novaData = new Date(currentCard.data.seconds * 1000 + currentCard.data.nanoseconds / 1000000);
           novaData.setDate(novaData.getDate() + 5);
           this.cardsEstudar[this.currentIndex] = { ...currentCard, data: novaData };
-          if (this.currentIndex < this.cardsEstudar.length - 1) {
-            this.currentIndex++;
-            console.log(this.currentIndex)
-          }
+          this.refreshCards();
         });
       }
   }
@@ -51,10 +49,7 @@ export class Tab2Page {
           const novaData = new Date(currentCard.data.seconds * 1000 + currentCard.data.nanoseconds / 1000000);
           novaData.setDate(novaData.getDate() + 3);
           this.cardsEstudar[this.currentIndex] = { ...currentCard, data: novaData };
-          if (this.currentIndex < this.cardsEstudar.length - 1) {
-            this.currentIndex++;
-            console.log(this.currentIndex)
-          }
+          this.refreshCards();
         });
       }
   }
@@ -66,10 +61,7 @@ export class Tab2Page {
           const novaData = new Date(currentCard.data.seconds * 1000 + currentCard.data.nanoseconds / 1000000);
           novaData.setDate(novaData.getDate() + 1);
           this.cardsEstudar[this.currentIndex] = { ...currentCard, data: novaData };
-          if (this.currentIndex < this.cardsEstudar.length - 1) {
-            this.currentIndex++;
-            console.log(this.currentIndex)
-          }
+          this.refreshCards();
         });
       }
   }

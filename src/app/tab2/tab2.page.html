@@ -14,14 +14,16 @@
   </ion-header>
 
 
-  <ion-card *ngIf="cardsEstudar[currentIndex]">
-    <ion-card-header>
-      <ion-card-title>{{ cardsEstudar[currentIndex]?.pergunta }}</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      {{ cardsEstudar[currentIndex]?.resposta }}
-    </ion-card-content>
-  </ion-card>
+  <div *ngIf="cardsEstudar[currentIndex]">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{ cardsEstudar[currentIndex]?.pergunta }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        {{ cardsEstudar[currentIndex]?.resposta }}
+      </ion-card-content>
+    </ion-card>
+  </div>
   
 
   <div class="nav-buttons">
