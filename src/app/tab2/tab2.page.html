@@ -14,21 +14,34 @@
   </ion-header>
 
 
-  <div *ngIf="cardsEstudar[currentIndex]">
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>{{ cardsEstudar[currentIndex]?.pergunta }}</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        {{ cardsEstudar[currentIndex]?.resposta }}
-      </ion-card-content>
-    </ion-card>
-  </div>
-  
+  <div class="cards" *ngIf="cardsEstudar.length > 0;else emptyTemplate">
+    <div class="card" *ngFor="let cardEstudar of cardsEstudar;let i= index;" [style.zIndex]="cardsEstudar.length - i" (touchstart)="touchStart($event)" (touchmove)="touchMove($event,i)" (touchend)="touchEnd(i)" id="{{'card-'+i}}">
 
-  <div class="nav-buttons">
-    <ion-button (click)="adicionar5Dias()">Facil</ion-button>
-    <ion-button (click)="adicionar3Dias()">Medio</ion-button>
-    <ion-button (click)="adicionar1Dia()">Dificil</ion-button>
+      <ion-card mode="ios">
+        <ion-card-content mode="md">
+          <ion-label>
+            <h2>
+              <ion-text color="primary" size="large" class="ion-text" style="font-size: 2rem">{{ cardEstudar?.pergunta }}</ion-text>
+            </h2>
+            <br><br><br>
+            <br><br><br>
+            <br><br><br>
+            <br><br><br>
+            <p>
+              <ion-text color="dark" size="medium" class="ion-text" style="font-size: 1.5rem">{{ cardEstudar?.resposta }}</ion-text>
+            </p>              
+          </ion-label>
+        </ion-card-content>
+      </ion-card>    
+    </div>
+
   </div>
+
+  <ng-template #emptyTemplate>
+    <div class="center">
+      <ion-icon name="checkmark-circle"></ion-icon>
+      <br>
+      <ion-note>Sem mais cartas hoje!</ion-note>
+    </div>
+  </ng-template>
 </ion-content>

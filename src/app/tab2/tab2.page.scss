@@ -1,18 +1,49 @@
+::-webkit-scrollbar {
+  display: none;
+}
 
+.cards {
+  position: relative;
+  height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
+  .card {
+      position: absolute;
 
-.nav-buttons {
-    position: absolute;
-    bottom: 7%;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 20px 0;
+      ion-card {
+          position: relative;
+          border-radius: 16px;
+          padding: 10vh;
+          height: 50%;
+
+          ion-card-content {
+              padding: 0;
+
+                  ion-label {
+                    
+                      h2 {
+                          font-size: x-large;
+                      }
+
+                      p {
+                          font-size: large;
+                      }
+                  }
+
+          }
+      }        
   }
 
+}
 
-  
-  
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  text-align: center;
+}
