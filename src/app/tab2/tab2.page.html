@@ -17,7 +17,7 @@
   <div class="cards" *ngIf="cardsEstudar.length > 0;else emptyTemplate">
     <div class="card" *ngFor="let cardEstudar of cardsEstudar;let i= index;" [style.zIndex]="cardsEstudar.length - i" (touchstart)="touchStart($event)" (touchmove)="touchMove($event,i)" (touchend)="touchEnd(i)" id="{{'card-'+i}}">
 
-      <ion-card mode="ios">
+      <ion-card (click)="toggleAnswer(cardEstudar?.id)" mode="ios">
         <ion-card-content mode="md">
           <ion-label>
             <h2>
@@ -27,14 +27,14 @@
             <br><br><br>
             <br><br><br>
             <br><br><br>
-            <p>
-              <ion-text color="dark" size="medium" class="ion-text" style="font-size: 1.5rem">{{ cardEstudar?.resposta }}</ion-text>
-            </p>              
+            <p [ngClass]="{'ion-hide': !cardEstudar?.showAnswer}">
+              <ion-text class="ion-hide" color="dark" size="medium" class="ion-text" style="font-size: 1.5rem">{{ cardEstudar?.resposta }}</ion-text>
+            </p>           
           </ion-label>
         </ion-card-content>
-      </ion-card>    
+      </ion-card>   
+    
     </div>
-
   </div>
 
   <ng-template #emptyTemplate>
