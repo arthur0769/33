@@ -20,16 +20,19 @@
       <ion-card (click)="toggleAnswer(cardEstudar?.id)" mode="ios">
         <ion-card-content mode="md">
           <ion-label>
+
             <h2>
               <ion-text color="primary" size="large" class="ion-text" style="font-size: 2rem">{{ cardEstudar?.pergunta }}</ion-text>
             </h2>
+
             <br><br><br>
             <br><br><br>
             <br><br><br>
-            <br><br><br>
+            
             <p [ngClass]="{'ion-hide': !cardEstudar?.showAnswer}">
               <ion-text class="ion-hide" color="dark" size="medium" class="ion-text" style="font-size: 1.5rem">{{ cardEstudar?.resposta }}</ion-text>
             </p>           
+
           </ion-label>
         </ion-card-content>
       </ion-card>   
