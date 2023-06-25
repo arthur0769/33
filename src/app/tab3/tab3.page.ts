@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { LoginModalComponent } from './login-modal.component';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-tab3',
@@ -7,6 +10,21 @@ import { Component } from '@angular/core';
 })
 export class Tab3Page {
 
-  constructor() {}
+  constructor(
+    private modalController: ModalController,
+    private authService: AuthService
+    ) {}
+
+  async openLoginModal() {
+    const modal = await this.modalController.create({
+      component: LoginModalComponent,
+      cssClass: 'login-modal',
+    });
+    return await modal.present();
+  }
+  
+  logout() {
+    this.authService.logout();
+  }
 
 }

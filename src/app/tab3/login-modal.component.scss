@@ -1,0 +1,23 @@
+.login-modal {
+    .modal-wrapper {
+      max-width: 90vw;
+      width: 90%;
+    }
+  
+    ion-content {
+      --padding-top: 0;
+      --padding-bottom: 0;
+    }
+  
+    form {
+      ion-item {
+        --padding-start: 0;
+        --padding-end: 0;
+      }
+  
+      ion-button {
+        --margin-top: 8px;
+      }
+    }
+  }
+  

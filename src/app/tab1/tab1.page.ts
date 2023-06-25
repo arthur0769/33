@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DataService } from '../services/data.service';
-import { AlertController } from '@ionic/angular';
+import { AuthService } from '../tab3/auth.service';
+import { Router } from '@angular/router';
 
 
 
@@ -11,11 +12,16 @@ import { AlertController } from '@ionic/angular';
 })
 
 export class Tab1Page {
+  profile = null;
 
   pergunta: string;
   resposta: string;
   
-  constructor(private dataService: DataService) {}
+  constructor(
+    private dataService: DataService, 
+    private authService: AuthService,
+    private router: Router,
+    ) {}
   
   async addCards() {
     const hoje = new Date();
@@ -26,5 +32,5 @@ export class Tab1Page {
     };
     await this.dataService.addCards(novaCarta);
   }
-  
+
 } 

@@ -1,0 +1,38 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-title>
+        Login
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content class="ion-padding" [fullscreen]="true">
+    <ion-header collapse="condense">
+      <ion-toolbar>
+        <ion-title size="large"> Login </ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <br><br><br>
+
+    <form [formGroup]="credentials" (ngSubmit)="login()">
+  
+      <ion-item fill="solid" class="ion-margin-bottom">
+        <ion-input type="email" placeholder="Email" formControlName="email"></ion-input>
+        <ion-note slot="error" *ngIf="email?.invalid">Email inválido</ion-note>
+      </ion-item>
+  
+      <ion-item fill="solid" class="ion-margin-bottom">
+        <ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
+        <ion-note slot="error" *ngIf="password?.invalid">Senha inválida</ion-note>
+      </ion-item>
+  
+      <ion-button expand="full" type="submit" [disabled]="!credentials.valid">Login</ion-button>
+      <ion-button expand="full" type="button" (click)="register()">Criar conta</ion-button>
+  
+    </form>
+
+  </ion-content>
+  
+  
+  
