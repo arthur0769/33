@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { DataService } from '../services/data.service';
-import { AuthService } from '../tab3/auth.service';
+import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
 

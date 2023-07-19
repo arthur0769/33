@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
-import { AuthService } from './auth.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login-modal',

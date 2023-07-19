@@ -12,7 +12,7 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import { DataService } from './services/data.service';
-import { AuthService } from './tab3/auth.service';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   declarations: [AppComponent],
