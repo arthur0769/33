@@ -23,14 +23,21 @@ export class Tab1Page {
     private router: Router,
     ) {}
   
-  async addCards() {
-    const hoje = new Date();
-    const novaCarta = {
-      pergunta: this.pergunta,
-      resposta: this.resposta,
-      data: hoje
-    };
-    await this.dataService.addCards(novaCarta);
+    async addCards() {
+      if (!this.authService.uid) {
+          console.error("User not authenticated!");
+          window.alert("Você não está logado!");
+          return;
+      }
+  
+      const hoje = new Date();
+      const novaCarta = {
+          pergunta: this.pergunta,
+          resposta: this.resposta,
+          data: hoje
+      };
+      await this.dataService.addCards(novaCarta);
   }
+  
 
 } 
