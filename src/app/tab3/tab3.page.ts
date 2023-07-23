@@ -26,5 +26,5 @@ export class Tab3Page {
   logout() {
     this.authService.logout();
   }
-
+  
 }

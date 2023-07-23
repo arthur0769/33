@@ -1,22 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';  // Importar OnDestroy
 import { Cards, DataService } from '../services/data.service';
+import { AuthService } from '../services/auth.service';  // Importar AuthService
+import { Subscription } from 'rxjs';  // Importar Subscription
 
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss']
 })
-export class Tab2Page {
+export class Tab2Page implements OnDestroy {  // Implementar OnDestroy
   public cardsEstudar: any[] = [];
   public currentIndex = 0;
   public isVisible: boolean[] = [];
+  private uidSubscription?: Subscription;  // Propriedade para manter a inscrição
 
-  startX: number = 0; // starting point of the swipe
-  endX: number = 0; // ending point of the swipe
-  startY: number = 0; // starting point of the swipe on Y axis
-  endY: number = 0; // ending point of the swipe on Y axis
+  startX: number = 0;
+  endX: number = 0;
+  startY: number = 0;
+  endY: number = 0;
 
-  constructor(private dataService: DataService) {}
+  constructor(private dataService: DataService, private authService: AuthService) {  // Injetar AuthService
+    // Inscrever-se no evento uidChanged
+    this.uidSubscription = this.authService.uidChanged.subscribe(() => {
+      this.refreshCards();
+    });
+  }
+
+  ngOnDestroy() {  // Método ngOnDestroy para cancelar a inscrição
+    if (this.uidSubscription) {
+      this.uidSubscription.unsubscribe();
+    }
+  }
 
   private refreshCards() {
     this.dataService.getCardsHoje().subscribe((cards: { id: string; data: Cards }[]) => {

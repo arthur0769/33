@@ -1,11 +1,13 @@
 import { Injectable } from "@angular/core";
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, UserCredential } from "@angular/fire/auth";
+import { Subject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AuthService {
     public uid: string | null = null;
+    public uidChanged = new Subject<string | null>();  // Adicionar este Subject
 
     constructor(private auth: Auth) {}
 
@@ -16,7 +18,8 @@ export class AuthService {
                 email,
                 password
             );
-            this.uid = userCredential.user.uid; // Armazenando o uid após o registro bem-sucedido
+            this.uid = userCredential.user.uid;
+            this.uidChanged.next(this.uid);  // Emitir o evento
             return userCredential;
         } catch (e) {
             console.error("Error during registration:", e);
@@ -31,7 +34,8 @@ export class AuthService {
                 email,
                 password
             );
-            this.uid = userCredential.user.uid; // Armazenando o uid após o login bem-sucedido
+            this.uid = userCredential.user.uid;
+            this.uidChanged.next(this.uid);  // Emitir o evento
             return userCredential;
         } catch (e) {
             console.error("Error during login:", e);
@@ -40,7 +44,7 @@ export class AuthService {
     }
 
     logout() {
-        this.uid = null; // Limpando o uid após o logout
+        this.uid = null;
         return signOut(this.auth);
     }
 }

@@ -2,9 +2,10 @@ import { Injectable } from "@angular/core";
 import { Firestore, collectionData, addDoc, setDoc, doc, getDocs, getDoc } from "@angular/fire/firestore";
 import { DocumentSnapshot, and, collection } from "firebase/firestore";
 import { query, where } from 'firebase/firestore';
-import { map } from 'rxjs/operators';
+import { map, retry } from 'rxjs/operators';
 import { Observable, from } from "rxjs";
 import { AuthService } from './auth.service';  // Não esqueça de importar o AuthService
+import { of } from 'rxjs';
 
 export interface Cards {
     id?: string;
