@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';  // Importar OnDestroy
 import { Cards, DataService } from '../services/data.service';
 import { AuthService } from '../services/auth.service';  // Importar AuthService
 import { Subscription } from 'rxjs';  // Importar Subscription
+import { SharedService } from '../services/SharedService';
 
 @Component({
   selector: 'app-tab2',
@@ -19,10 +20,11 @@ export class Tab2Page implements OnDestroy {  // Implementar OnDestroy
   startY: number = 0;
   endY:   number = 0;
 
-  constructor(private dataService: DataService, private authService: AuthService) {  // Injetar AuthService
-    // Inscrever-se no evento uidChanged
-    this.uidSubscription = this.authService.uidChanged.subscribe(() => {
-      this.refreshCards();
+  constructor(private sharedService: SharedService, private dataService: DataService, private authService: AuthService) {
+    this.sharedService.refreshObservable.subscribe(shouldRefresh => {
+      if (shouldRefresh) {
+        this.refreshCards();
+      }
     });
   }
 
@@ -32,14 +34,14 @@ export class Tab2Page implements OnDestroy {  // Implementar OnDestroy
     }
   }
 
-  private refreshCards() {
+  refreshCards() {
     this.dataService.getCardsHoje().subscribe((cards: { id: any; data: Cards }[]) => {
-      this.cardsEstudar = cards;
+      this.cardsEstudar = [...cards]; // Criando uma nova instância
       if (this.cardsEstudar.length > 0) {
         this.currentIndex = 0;
       }
     });
-  }
+}
 
   ngOnInit() {
     this.refreshCards();
@@ -80,6 +82,7 @@ export class Tab2Page implements OnDestroy {  // Implementar OnDestroy
   }
 
   touchEnd(index: number) {
+    
     if (this.endX > 0) {
       // to avoid removing card on click
       let finalX = this.endX - this.startX;
