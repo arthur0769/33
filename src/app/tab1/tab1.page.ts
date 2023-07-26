@@ -24,12 +24,6 @@ export class Tab1Page {
     ) {}
   
     async addCards() {
-      if (!this.authService.uid) {
-          console.error("User not authenticated!");
-          window.alert("Você não está logado!");
-          return;
-      }
-  
       const hoje = new Date();
       const novaCarta = {
           pergunta: this.pergunta,

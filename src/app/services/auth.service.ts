@@ -7,9 +7,11 @@ import { Subject } from 'rxjs';
 })
 export class AuthService {
     public uid: string | null = null;
-    public uidChanged = new Subject<string | null>();  // Adicionar este Subject
+    public uidChanged = new Subject<string | null>();
 
-    constructor(private auth: Auth) {}
+    constructor(private auth: Auth) {
+        this.authStateCheck();
+    }
 
     async register({ email, password }: { email: string, password: string }): Promise<UserCredential | null> {
         try {
@@ -19,7 +21,7 @@ export class AuthService {
                 password
             );
             this.uid = userCredential.user.uid;
-            this.uidChanged.next(this.uid);  // Emitir o evento
+            this.uidChanged.next(this.uid);
             return userCredential;
         } catch (e) {
             console.error("Error during registration:", e);
@@ -35,7 +37,7 @@ export class AuthService {
                 password
             );
             this.uid = userCredential.user.uid;
-            this.uidChanged.next(this.uid);  // Emitir o evento
+            this.uidChanged.next(this.uid);
             return userCredential;
         } catch (e) {
             console.error("Error during login:", e);
@@ -45,6 +47,19 @@ export class AuthService {
 
     logout() {
         this.uid = null;
+        this.uidChanged.next(null); // Emitir o evento
         return signOut(this.auth);
+    }
+
+    private authStateCheck() {
+        this.auth.onAuthStateChanged(user => {
+            if (user) {
+                this.uid = user.uid;
+                this.uidChanged.next(this.uid);
+            } else {
+                this.uid = null;
+                this.uidChanged.next(null);
+            }
+        });
     }
 }

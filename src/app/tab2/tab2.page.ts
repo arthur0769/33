@@ -15,9 +15,9 @@ export class Tab2Page implements OnDestroy {  // Implementar OnDestroy
   private uidSubscription?: Subscription;  // Propriedade para manter a inscrição
 
   startX: number = 0;
-  endX: number = 0;
+  endX:   number = 0;
   startY: number = 0;
-  endY: number = 0;
+  endY:   number = 0;
 
   constructor(private dataService: DataService, private authService: AuthService) {  // Injetar AuthService
     // Inscrever-se no evento uidChanged
@@ -33,7 +33,7 @@ export class Tab2Page implements OnDestroy {  // Implementar OnDestroy
   }
 
   private refreshCards() {
-    this.dataService.getCardsHoje().subscribe((cards: { id: string; data: Cards }[]) => {
+    this.dataService.getCardsHoje().subscribe((cards: { id: any; data: Cards }[]) => {
       this.cardsEstudar = cards;
       if (this.cardsEstudar.length > 0) {
         this.currentIndex = 0;
