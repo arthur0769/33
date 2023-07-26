@@ -1,1 +1,19 @@
+/* Este é o tamanho padrão para dispositivos móveis */
+ion-tab-bar {
+    height: 50px; /* Você pode ajustar esse valor conforme sua necessidade */
+}
 
+ion-tab-button ion-icon {
+    font-size: 24px; /* Este é um tamanho de exemplo. Ajuste conforme sua necessidade. */
+}
+
+/* Diminuir o tamanho da barra de abas para telas maiores que 768px (tablets e desktops) */
+@media screen and (min-width: 768px) {
+    ion-tab-bar {
+        height: 40px; /* Diminui a altura da barra de abas */
+    }
+
+    ion-tab-button ion-icon {
+        font-size: 25px; /* Diminui o tamanho do ícone */
+    }
+}
