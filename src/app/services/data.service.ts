@@ -12,19 +12,18 @@ export interface Cards {
     uid?: string | null;
     pergunta: string;
     resposta: string;
-    data: any;
+    data: string; // Mudado para string (formato ISO)
 }
 
 @Injectable({
     providedIn: 'root'
 })
 export class DataService {
-    db: any
+    db: any;
 
     constructor(private firestore: Firestore, private authService: AuthService) {
         this.db = firestore;
 
-        // Sincronizar os cards locais com o Firebase quando o usuário faz login
         this.authService.uidChanged.subscribe((uid) => {
             if (uid) {
                 this.syncLocalCardsWithFirebase();
@@ -38,34 +37,30 @@ export class DataService {
         return collectionData(queryRef);
     }
 
-    convertDateToFirebaseTimestamp(date: Date) {
-        const seconds = Math.floor(date.getTime() / 1000);
-        const nanoseconds = (date.getTime() % 1000) * 1000000;
-    
-        return {
-            seconds: seconds,
-            nanoseconds: nanoseconds
-        };
+    convertDateToFirebaseTimestamp(date: Date): string {
+        return date.toISOString();
     }
 
-    timestampToDate(timestamp: { seconds: number, nanoseconds: number }): Date {
-        // Convertendo timestamp para objeto Date
-        return new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
+    timestampToDate(isoDate: string): Date {
+        return new Date(isoDate);
     }
 
-    convertedias(timestamp: { seconds: number, nanoseconds: number }): string {
-        // Convertendo timestamp para objeto Date
-        const date = new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000);
+    formatTimestampToReadableDate(isoDate: string): string {
+        const date = this.timestampToDate(isoDate);
+        
+        const options: Intl.DateTimeFormatOptions = {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZoneName: 'short',
+            hour12: false
+        };        
     
-        // Formatando a data para "ano-mês-dia"
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // +1 porque os meses vão de 0 a 11
-        const day = String(date.getDate()).padStart(2, '0');
-    
-        return `${year}-${month}-${day}`;
+        return new Intl.DateTimeFormat('pt-BR', options).format(date);
     }
-    
-       
 
     getCardsHoje(): Observable<{id: string, data: Cards}[]> {
         const id = this.authService.uid;
@@ -73,96 +68,85 @@ export class DataService {
         const inicioDoDia = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
         const fimDoDia = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate() + 1);
     
-        // Convertendo datas para o formato de Timestamp do Firebase
-        const inicioDoDiaTimestamp = this.convertDateToFirebaseTimestamp(inicioDoDia);
-        const fimDoDiaTimestamp = this.convertDateToFirebaseTimestamp(fimDoDia);
+        const inicioDoDiaISO = inicioDoDia.toISOString();
+        const fimDoDiaISO = fimDoDia.toISOString();
         
-        if (id) { // Se usuário estiver logado
+        if (id) {
             const cardsRef = collection(this.firestore, 'cards');
             const queryRef = query(
                 cardsRef, 
                 where('uid', '==', id),
-                where('data', '>=', inicioDoDiaTimestamp),
-                where('data', '<', fimDoDiaTimestamp)
+                where('data', '>=', inicioDoDiaISO),
+                where('data', '<', fimDoDiaISO)
             );
             return collectionData(queryRef, {idField: 'id'}).pipe(
                 map(cards => cards as {id: string, data: Cards}[])
             );
-        } else { // Se o usuário não estiver logado
+        } else {
             let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
             
-            // Filtrar cards por data
             const cardsHoje = localCards.filter((card: Cards) => {
                 const cardDate = this.timestampToDate(card.data); 
                 return cardDate >= inicioDoDia && cardDate < fimDoDia;
             });
 
-            return of(cardsHoje); // Emitir os cards filtrados
+            return of(cardsHoje);
         }
     }
     
     addCards(cards: Cards) {
-        // Convert date to Firebase Timestamp format
-        const timestamp = this.convertDateToFirebaseTimestamp(new Date());
-    
-        // Update the date in cards with the new format
-        cards.data = timestamp;
-    
+        const isoDate = new Date().toISOString();
+        cards.data = isoDate;
+
         if (this.authService.uid) {
-            // If the user is logged in, add cards to Firestore
             cards.uid = this.authService.uid;
             const cardsRef = collection(this.firestore, 'cards');
-            return addDoc(cardsRef, cards);
+            return addDoc(cardsRef, cards).then(() => {
+                console.log("Card adicionado em:", this.formatTimestampToReadableDate(cards.data));
+            });
         } else {
-            // If the user is not logged in, save cards to local storage
-            const cardId = 'local_' + new Date().getTime(); // This creates a unique ID based on the current timestamp.
+            const cardId = 'local_' + new Date().getTime();
             cards.id = cardId;
             let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
             localCards.push(cards);
             localStorage.setItem('localCards', JSON.stringify(localCards));
-            return Promise.resolve(); // Return a resolved promise for consistency
+            
+            console.log("Card armazenado localmente em:", this.formatTimestampToReadableDate(cards.data));
+            return Promise.resolve();
         }
     }
-     
 
-    updateCardData(id: string, oldData: any, dias: number): Observable<any> {
-        const novaData = new Date(oldData.seconds * 1000 + oldData.nanoseconds / 1000000);
+    private syncLocalCardsWithFirebase() {
+        let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
+
+        if (localCards.length > 0) {
+            localCards.forEach((card: Cards) => {
+                delete card.id;
+                this.addCards(card).then(() => {
+                    console.log("Card sincronizado em:", this.formatTimestampToReadableDate(card.data));
+                });
+            });
+            localStorage.removeItem('localCards');
+        }
+    }
+
+    updateCardData(id: string, oldData: string, dias: number): Observable<any> {
+        const novaData = new Date(oldData);
         novaData.setDate(novaData.getDate() + dias);
     
-        // Se estivermos trabalhando com dados do Firestore
         if (this.authService.uid) {
             const cardRef = doc(this.firestore, 'cards', id);
-            return from(setDoc(cardRef, { data: novaData }, { merge: true }));
+            return from(setDoc(cardRef, { data: novaData.toISOString() }, { merge: true }));
         } else {
-            // Se estivermos trabalhando com dados locais
             let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
             const cardIndex = localCards.findIndex((card: { id: string; }) => card.id === id);
     
             if (cardIndex !== -1) {
-                localCards[cardIndex].data = { 
-                    seconds: Math.floor(novaData.getTime() / 1000), 
-                    nanoseconds: (novaData.getTime() % 1000) * 1000000 
-                };
+                localCards[cardIndex].data = novaData.toISOString();
                 localStorage.setItem('localCards', JSON.stringify(localCards));
             }
     
-            // Aqui, estamos apenas retornando um Observable de sucesso, visto que o armazenamento local não é assíncrono
             return of({ success: true });
         }
     }    
-
-    private syncLocalCardsWithFirebase() {
-        let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
-        
-        if (localCards.length > 0) {
-            localCards.forEach((card: Cards) => {
-                // Remove the local ID before adding to Firestore
-                delete card.id;
-                this.addCards(card);
-            });
-
-            // Clear local storage after syncing
-            localStorage.removeItem('localCards');
-        }
-    }
 }
