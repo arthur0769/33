@@ -1,35 +1,38 @@
 ::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .center {
-    display: flex;          /* Transforma o container em um flex container */
+    display: flex;          
     flex-direction: column;
-    justify-content: center; /* Centralizar horizontalmente */
-    align-items: center;     /* Centralizar verticalmente */
-    height: 100%;            /* Ocupar toda a altura do container pai */
-    width: 100%;             /* Ocupar toda a largura do container pai */
-    position: absolute;      /* Posicionamento absoluto */
-    top: 0;                  /* Alinha ao topo do container pai */
-    left: 0;                 /* Alinha à esquerda do container pai */
-  }  
+    justify-content: center; 
+    align-items: center;     
+    height: 100%;            
+    width: 100%;             
+    position: absolute;      
+    top: 0;                  
+    left: 0;                 
+}
 
 .cards {
-  display: flex;
-  justify-content: center; /* Centralizar horizontalmente */
-  align-items: center;     /* Centralizar verticalmente */
-  height: 90%;            /* Preencher a altura da área contida */
-  max-width: 90%;
+    display: flex;
+    justify-content: center; 
+    align-items: center;     
+    height: 90%;            
+    max-width: 90%;
 }
 
 .cards .card {
-    width: 90%; /* Preenche 90% da largura do container */
+    display: none;
+    width: 90%; 
     
     ion-card {
-        width: 100%;         /* Preencher toda a largura do .card */
-        height: 70%;         /* Altura padrão para dispositivos móveis */
-        padding: 15vh;        /* Espaçamento interno */
-        border-radius: 16px; /* Bordas arredondadas */
+        width: 100%;        
+        height: auto;        /* Altura se ajusta ao conteúdo */
+        max-height: 90%;    /* Limita a altura máxima */
+        overflow-y: auto;   /* Habilita a rolagem se o conteúdo exceder */
+        padding: 2%;        
+        border-radius: 16px; 
         
         ion-card-content {
             padding: 0;
@@ -38,6 +41,7 @@
             ion-label {
                 h2 {
                     font-size: x-large;
+                    margin-bottom: 2%;  /* Espaçamento entre o título e a resposta */
                 }
 
                 p {
@@ -52,6 +56,6 @@
 @media (min-width: 768px) {
     .cards .card ion-card {
         padding: 2vh;
-        height: 90%; /* Altura maior para telas de desktop */
+        max-height: 90%; 
     }
 }

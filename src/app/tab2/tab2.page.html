@@ -13,10 +13,10 @@
     </ion-toolbar>
   </ion-header>
 
-
   <div class="cards" *ngIf="cardsEstudar.length > 0;else emptyTemplate">
-    <div class="card" *ngFor="let cardEstudar of cardsEstudar;let i= index;" [style.zIndex]="cardsEstudar.length - i" (touchstart)="touchStart($event)" (touchmove)="touchMove($event,i)" (touchend)="touchEnd(i)" id="{{'card-'+i}}">
-
+    <!-- Apenas a card com o índice correspondente ao currentIndex será mostrada -->
+    <div class="card" *ngFor="let cardEstudar of cardsEstudar;let i= index;" [style.zIndex]="cardsEstudar.length - i" [ngStyle]="{ 'display': i === currentIndex ? 'block' : 'none' }" (touchstart)="touchStart($event)" (touchmove)="touchMove($event,i)" (touchend)="touchEnd(i)" id="{{'card-'+i}}">
+      
       <ion-card (click)="toggleAnswer(cardEstudar?.id)" mode="ios">
         <ion-card-content mode="md">
           <ion-label>
@@ -35,8 +35,8 @@
 
           </ion-label>
         </ion-card-content>
-      </ion-card>   
-    
+      </ion-card>
+
     </div>
   </div>
 
@@ -45,4 +45,5 @@
       <ion-icon name="checkmark-circle" size="large" style="display: block;"></ion-icon>
       <ion-note style="display: block;">Sem mais cartas hoje!</ion-note>
     </div>
-</ng-template>
+  </ng-template>
+</ion-content>
