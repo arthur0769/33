@@ -59,3 +59,21 @@
         max-height: 90%; 
     }
 }
+
+
+
+.action-buttons {
+    display: none;
+    margin-top: 20px;
+    button {
+      margin: 0 10px;
+    }
+  }
+  
+  /* A partir de 768px (considerando um tablet ou desktop), mostrar os botões */
+  @media screen and (min-width: 768px) {
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+    }
+  }
