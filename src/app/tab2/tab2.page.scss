@@ -57,6 +57,8 @@
     .cards .card ion-card {
         padding: 2vh;
         max-height: 90%; 
+        max-width: 100%;
+        margin-left: 5%;
     }
 }
 
@@ -68,6 +70,7 @@
     button {
       margin: 0 10px;
     }
+    margin-left: 12%;
   }
   
   /* A partir de 768px (considerando um tablet ou desktop), mostrar os botões */
