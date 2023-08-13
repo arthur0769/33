@@ -15,8 +15,15 @@
 
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
-    <ion-toolbar>
+    <ion-toolbar class="title-with-icon">
       <ion-title size="large">Ajustes</ion-title>
+
+      <!-- Ícone quando o usuário está OFFLINE (não logado) -->
+      <ion-icon *ngIf="!authService.uid" class="right-icon" name="cloud-offline-outline"></ion-icon>
+
+      <!-- Ícone quando o usuário está ONLINE (logado) -->
+      <ion-icon *ngIf="authService.uid" class="right-icon" name="cloud-outline"></ion-icon>
+
     </ion-toolbar>
   </ion-header>
 

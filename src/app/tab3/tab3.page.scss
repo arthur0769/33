@@ -1,0 +1,12 @@
+.title-with-icon {
+    position: relative;
+    padding-right: 20px;
+    font-size: 1.2em;
+}
+
+.right-icon {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}

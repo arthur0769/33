@@ -12,7 +12,7 @@ export class Tab3Page {
 
   constructor(
     private modalController: ModalController,
-    private authService: AuthService
+    public authService: AuthService,
     ) {}
 
   async openLoginModal() {

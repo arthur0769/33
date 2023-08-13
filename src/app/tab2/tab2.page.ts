@@ -20,7 +20,11 @@ export class Tab2Page implements OnDestroy {  // Implementar OnDestroy
   startY: number = 0;
   endY:   number = 0;
 
-  constructor(private sharedService: SharedService, private dataService: DataService, private authService: AuthService) {
+  constructor(
+    private sharedService: SharedService, 
+    private dataService: DataService, 
+    public authService: AuthService,
+    ) {
     this.sharedService.refreshObservable.subscribe(shouldRefresh => {
       if (shouldRefresh) {
         this.refreshCards();
