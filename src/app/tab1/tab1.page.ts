@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { SharedService } from '../services/SharedService';
 
 import { PopoverController } from '@ionic/angular';
-import { PopoverInfoComponent } from '../popover-info/popover-info.component';
 
 @Component({
   selector: 'app-tab1',
@@ -37,13 +36,4 @@ export class Tab1Page {
         this.sharedService.refreshCards();
     }
 
-    async showPopover(ev: any) {
-        const popover = await this.popoverCtrl.create({
-            component: PopoverInfoComponent,
-            event: ev,
-            translucent: true,
-            componentProps: { isOnline: !!this.authService.uid }
-        });
-        return await popover.present();
-    }
 }
