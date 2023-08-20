@@ -14,6 +14,8 @@ import { provideStorage, getStorage } from '@angular/fire/storage';
 import { DataService } from './services/data.service';
 import { AuthService } from './services/auth.service';
 
+import { CloudModalComponent } from './cloud-modal/cloud-modal.component';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -28,7 +30,8 @@ import { AuthService } from './services/auth.service';
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     DataService,
-    AuthService
+    AuthService,
+    CloudModalComponent,
   ],
   bootstrap: [AppComponent],
 })

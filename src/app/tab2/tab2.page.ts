@@ -4,6 +4,9 @@ import { AuthService } from '../services/auth.service';  // Importar AuthService
 import { Subscription } from 'rxjs';  // Importar Subscription
 import { SharedService } from '../services/SharedService';
 
+import { ModalController } from '@ionic/angular';
+import { CloudModalComponent } from '../cloud-modal/cloud-modal.component';
+
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
@@ -24,12 +27,21 @@ export class Tab2Page implements OnDestroy {  // Implementar OnDestroy
     private sharedService: SharedService, 
     private dataService: DataService, 
     public authService: AuthService,
+    private modalController: ModalController,
     ) {
     this.sharedService.refreshObservable.subscribe(shouldRefresh => {
       if (shouldRefresh) {
         this.refreshCards();
       }
     });
+  }
+
+  async openCloudModal() {
+    const modal = await this.modalController.create({
+      component: CloudModalComponent,
+      cssClass: 'cloud-modal',
+    });
+    return await modal.present();
   }
 
   ngOnDestroy() {  // Método ngOnDestroy para cancelar a inscrição

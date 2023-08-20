@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Tab3PageRoutingModule } from './tab3-routing.module';
 import { LoginModalComponent } from './login-modal.component';
 
+
 @NgModule({
   imports: [
     IonicModule,
@@ -16,11 +17,11 @@ import { LoginModalComponent } from './login-modal.component';
     FormsModule,
     ExploreContainerComponentModule,
     Tab3PageRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   declarations: [
     Tab3Page,
-    LoginModalComponent
+    LoginModalComponent,
   ]
 })
 export class Tab3PageModule {}
