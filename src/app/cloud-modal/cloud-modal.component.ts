@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonModal } from '@ionic/angular';
+import { IonModal, ModalController } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
 
 @Component({
@@ -8,23 +8,9 @@ import { OverlayEventDetail } from '@ionic/core/components';
   styleUrls: ['./cloud-modal.component.scss'],
 })
 export class CloudModalComponent {
-  @ViewChild(IonModal) modal: IonModal;
+  constructor(private modalController: ModalController) {}
 
-  message = 'This modal example uses triggers to automatically open a modal when the button is clicked.';
-  name: string;
-
-  cancel() {
-    this.modal.dismiss(null, 'cancel');
-  }
-
-  confirm() {
-    this.modal.dismiss(this.name, 'confirm');
-  }
-
-  onWillDismiss(event: Event) {
-    const ev = event as CustomEvent<OverlayEventDetail<string>>;
-    if (ev.detail.role === 'confirm') {
-      this.message = `Hello, ${ev.detail.data}!`;
-    }
+  dismissModal() {
+    this.modalController.dismiss();
   }
 }
