@@ -97,7 +97,7 @@ export class DataService {
     addCards(cards: Cards) {
         const isoDate = new Date().toISOString();
         cards.data = isoDate;
-
+    
         if (this.authService.uid) {
             cards.uid = this.authService.uid;
             const cardsRef = collection(this.firestore, 'cards');
@@ -115,6 +115,7 @@ export class DataService {
             return Promise.resolve();
         }
     }
+    
 
     private syncLocalCardsWithFirebase() {
         let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');

@@ -31,7 +31,7 @@ import { CloudModalComponent } from './cloud-modal/cloud-modal.component';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     DataService,
     AuthService,
-    CloudModalComponent,
+    CloudModalComponent
   ],
   bootstrap: [AppComponent],
 })

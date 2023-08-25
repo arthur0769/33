@@ -19,6 +19,7 @@ export class Tab1Page {
     profile = null;
     pergunta: string;
     resposta: string;
+    assunto: string = "geral";
   
     constructor(
         private sharedService: SharedService,
@@ -33,6 +34,7 @@ export class Tab1Page {
         const novaCarta = {
             pergunta: this.pergunta,
             resposta: this.resposta,
+            assunto: this.assunto,
             data: new Date().toISOString()
         };
         
