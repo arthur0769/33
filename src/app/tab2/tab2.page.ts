@@ -7,6 +7,7 @@ import { SharedService } from '../services/SharedService';
 import { ModalController } from '@ionic/angular';
 import { CloudModalComponent } from '../cloud-modal/cloud-modal.component';
 
+
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
@@ -36,6 +37,7 @@ export class Tab2Page implements OnDestroy {  // Implementar OnDestroy
     });
   }
 
+
   async openCloudModal() {
     const modal = await this.modalController.create({
       component: CloudModalComponent,
@@ -43,6 +45,7 @@ export class Tab2Page implements OnDestroy {  // Implementar OnDestroy
     });
     return await modal.present();
   }
+
 
   ngOnDestroy() {  // Método ngOnDestroy para cancelar a inscrição
     if (this.uidSubscription) {
@@ -55,13 +58,34 @@ export class Tab2Page implements OnDestroy {  // Implementar OnDestroy
       this.cardsEstudar = [...cards]; // Criando uma nova instância
       if (this.cardsEstudar.length > 0) {
         this.currentIndex = 0;
+        
+        // Agora, calcule a quantidade de assuntos únicos após os cards serem carregados
+        const quantidadeAssuntosUnicos = this.cardsEstudar.reduce((acc, card) => {
+          if (!acc.includes(card.assunto)) {
+            acc.push(card.assunto);
+          }
+          return acc;
+        }, []).length;
       }
+      console.log(this.cardsEstudar)
     });
-}
+  }
+  
 
   ngOnInit() {
+    // Primeiro, chame refreshCards para carregar os cards
     this.refreshCards();
+
+    // Após refreshCards, você pode calcular a quantidade de assuntos únicos
+    const quantidadeAssuntosUnicos = this.cardsEstudar.reduce((acc, card) => {
+      if (!acc.includes(card.assunto)) {
+        acc.push(card.assunto);
+      }
+      return acc;
+    }, []).length;
   }
+
+
 
   toggleAnswer(cardId: string) {
     const card = this.cardsEstudar.find((c) => c.id === cardId);

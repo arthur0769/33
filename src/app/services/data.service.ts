@@ -62,7 +62,7 @@ export class DataService {
         return new Intl.DateTimeFormat('pt-BR', options).format(date);
     }
 
-    getCardsHoje(): Observable<{id: string, data: Cards}[]> {
+    getCardsHoje(): Observable<{id: string, data: Cards, assunto: string}[]> {
         const id = this.authService.uid;
         const agora = new Date();
         const inicioDoDia = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
@@ -80,7 +80,7 @@ export class DataService {
                 where('data', '<', fimDoDiaISO)
             );
             return collectionData(queryRef, {idField: 'id'}).pipe(
-                map(cards => cards as {id: string, data: Cards}[])
+                map(cards => cards as {id: string, data: Cards, assunto: string}[])
             );
         } else {
             let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
@@ -89,10 +89,11 @@ export class DataService {
                 const cardDate = this.timestampToDate(card.data); 
                 return cardDate >= inicioDoDia && cardDate < fimDoDia;
             });
-
+    
             return of(cardsHoje);
         }
-    }
+    }    
+    
     
     addCards(cards: Cards) {
         const isoDate = new Date().toISOString();

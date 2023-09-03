@@ -17,7 +17,7 @@ import { Tab2PageRoutingModule } from './tab2-routing.module';
     Tab2PageRoutingModule,
   ],
   declarations: [
-    Tab2Page
+    Tab2Page,
   ]
 })
 export class Tab2PageModule {}
