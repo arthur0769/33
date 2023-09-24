@@ -8,6 +8,7 @@ import { AuthService } from './auth.service';
 import { of } from 'rxjs';
 
 export interface Cards {
+    assunto: string;
     id?: string;
     uid?: string | null;
     pergunta: string;
@@ -62,7 +63,7 @@ export class DataService {
         return new Intl.DateTimeFormat('pt-BR', options).format(date);
     }
 
-    getCardsHoje(): Observable<{id: string, data: Cards, assunto: string}[]> {
+    getCardsHoje(assunto: string): Observable<{ id: string; data: Cards; assunto: string }[]> {
         const id = this.authService.uid;
         const agora = new Date();
         const inicioDoDia = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
@@ -93,6 +94,13 @@ export class DataService {
             return of(cardsHoje);
         }
     }    
+
+    async hasCards(uid: string): Promise<boolean> {
+        const cardsRef = collection(this.firestore, "cards");
+        const queryRef = query(cardsRef, where("uid", "==", uid));
+        const querySnapshot = await getDocs(queryRef);
+        return !querySnapshot.empty;
+      }
     
     
     addCards(cards: Cards) {

@@ -1,42 +1,52 @@
-import { Component, OnDestroy } from '@angular/core';  // Importar OnDestroy
+import { Component, OnDestroy } from '@angular/core';
 import { Cards, DataService } from '../services/data.service';
-import { AuthService } from '../services/auth.service';  // Importar AuthService
-import { Subscription } from 'rxjs';  // Importar Subscription
+import { AuthService } from '../services/auth.service';
+import { Subscription } from 'rxjs';
 import { SharedService } from '../services/SharedService';
-
 import { ModalController } from '@ionic/angular';
 import { CloudModalComponent } from '../cloud-modal/cloud-modal.component';
-
+import { AssuntoService } from '../services/assunto.service';
 
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss']
 })
-export class Tab2Page implements OnDestroy {  // Implementar OnDestroy
+export class Tab2Page implements OnDestroy {
   public cardsEstudar: any[] = [];
   public currentIndex = 0;
   public isVisible: boolean[] = [];
-  private uidSubscription?: Subscription;  // Propriedade para manter a inscrição
-
+  private uidSubscription?: Subscription;
+  
   startX: number = 0;
-  endX:   number = 0;
+  endX: number = 0;
   startY: number = 0;
-  endY:   number = 0;
+  endY: number = 0;
+
+  private _assunto: string; // Adicione a declaração da variável _assunto
+
+  get assunto(): string {
+    return this._assunto;
+  }
+
+  set assunto(value: string) {
+    this._assunto = value;
+    this.refreshCards()
+  }
 
   constructor(
-    private sharedService: SharedService, 
-    private dataService: DataService, 
+    private sharedService: SharedService,
+    private dataService: DataService,
     public authService: AuthService,
     private modalController: ModalController,
-    ) {
+    private assuntoService: AssuntoService
+  ) {
     this.sharedService.refreshObservable.subscribe(shouldRefresh => {
       if (shouldRefresh) {
         this.refreshCards();
       }
     });
   }
-
 
   async openCloudModal() {
     const modal = await this.modalController.create({
@@ -46,46 +56,33 @@ export class Tab2Page implements OnDestroy {  // Implementar OnDestroy
     return await modal.present();
   }
 
-
-  ngOnDestroy() {  // Método ngOnDestroy para cancelar a inscrição
+  ngOnDestroy() {
     if (this.uidSubscription) {
       this.uidSubscription.unsubscribe();
     }
   }
 
   refreshCards() {
-    this.dataService.getCardsHoje().subscribe((cards: { id: any; data: Cards }[]) => {
+    // Use o valor atualizado do assunto para buscar os cards
+    this.dataService.getCardsHoje(this.assunto).subscribe((cards: { id: any; data: Cards }[]) => {
       this.cardsEstudar = [...cards]; // Criando uma nova instância
       if (this.cardsEstudar.length > 0) {
         this.currentIndex = 0;
-        
-        // Agora, calcule a quantidade de assuntos únicos após os cards serem carregados
-        const quantidadeAssuntosUnicos = this.cardsEstudar.reduce((acc, card) => {
-          if (!acc.includes(card.assunto)) {
-            acc.push(card.assunto);
-          }
-          return acc;
-        }, []).length;
       }
-      console.log(this.cardsEstudar)
+      console.log(this.cardsEstudar);
+    });
+  }
+
+
+  ngOnInit() {
+    this.assuntoService.getAssunto().subscribe((assunto) => {
+      this._assunto = assunto; // Atualize a variável local com o valor do serviço
+      this.refreshCards(); // Atualize os cards quando o assunto for alterado
+      console.log(this.assunto); // Mova o console.log para cá
     });
   }
   
-
-  ngOnInit() {
-    // Primeiro, chame refreshCards para carregar os cards
-    this.refreshCards();
-
-    // Após refreshCards, você pode calcular a quantidade de assuntos únicos
-    const quantidadeAssuntosUnicos = this.cardsEstudar.reduce((acc, card) => {
-      if (!acc.includes(card.assunto)) {
-        acc.push(card.assunto);
-      }
-      return acc;
-    }, []).length;
-  }
-
-
+  
 
   toggleAnswer(cardId: string) {
     const card = this.cardsEstudar.find((c) => c.id === cardId);

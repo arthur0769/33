@@ -1,3 +1,6 @@
+@import '../../theme/variables.scss'; // Importa o arquivo SCSS geral da aplicação
+
+
 .card-container {
       bottom: 20%;
   }
@@ -14,3 +17,9 @@
     top: 50%;
     transform: translateY(-50%);
 }
+
+@media screen and (max-width: 768px) {
+    .card-container {
+      bottom: 0;
+    }
+  }
