@@ -72,15 +72,16 @@ export class Tab2Page implements OnDestroy {
       console.log(this.cardsEstudar);
     });
   }
+  
 
 
   ngOnInit() {
     this.assuntoService.getAssunto().subscribe((assunto) => {
-      this._assunto = assunto; // Atualize a variável local com o valor do serviço
+      this.assunto = assunto; // Atualize a variável local com o valor do serviço
       this.refreshCards(); // Atualize os cards quando o assunto for alterado
       console.log(this.assunto); // Mova o console.log para cá
     });
-  }
+  }  
   
   
 

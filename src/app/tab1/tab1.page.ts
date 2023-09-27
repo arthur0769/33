@@ -65,6 +65,12 @@ export class Tab1Page {
     return await modal.present();
   }
 
+  updateAssunto(newAssunto: string) {
+    this.assunto = newAssunto;
+    // Atualize o assunto no serviço sempre que o usuário o alterar
+    this.assuntoService.setAssunto(this.assunto);
+  }
+
   ngOnInit() {
     this.updatePrimaryColor(); 
   }

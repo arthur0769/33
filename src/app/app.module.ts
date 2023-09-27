@@ -13,6 +13,7 @@ import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import { DataService } from './services/data.service';
 import { AuthService } from './services/auth.service';
+import { AssuntoService } from './services/assunto.service';
 
 import { CloudModalComponent } from './cloud-modal/cloud-modal.component';
 
@@ -32,6 +33,7 @@ import { CloudModalComponent } from './cloud-modal/cloud-modal.component';
     DataService,
     AuthService,
     CloudModalComponent,
+    AssuntoService
   ],
   bootstrap: [AppComponent],
 })

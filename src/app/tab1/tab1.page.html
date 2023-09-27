@@ -44,7 +44,7 @@
       <ion-item>
         <ion-label position="floating">Assunto</ion-label>
         
-        <ion-select placeholder="Assunto do card" interface="popover" [(ngModel)]="assunto">
+        <ion-select placeholder="Assunto do card" interface="popover" [(ngModel)]="assunto" (ionChange)="updateAssunto(assunto)">
           <ion-select-option value="geral">Conhecimentos gerais</ion-select-option>
           <ion-select-option value="ingles">Ingles</ion-select-option>
           <ion-select-option value="espanhol">Espanhol</ion-select-option>
