@@ -64,7 +64,7 @@ export class Tab2Page implements OnDestroy {
 
   refreshCards() {
     // Use o valor atualizado do assunto para buscar os cards
-    this.dataService.getCardsHoje(this.assunto).subscribe((cards: { id: any; data: Cards }[]) => {
+    this.dataService.getCardsHoje(this.assunto).subscribe((cards: { id: string; data: Cards; assunto: string }[]) => {
       this.cardsEstudar = [...cards]; // Criando uma nova instância
       if (this.cardsEstudar.length > 0) {
         this.currentIndex = 0;

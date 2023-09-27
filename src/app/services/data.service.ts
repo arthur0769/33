@@ -68,32 +68,29 @@ export class DataService {
         const agora = new Date();
         const inicioDoDia = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
         const fimDoDia = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate() + 1);
-    
+      
         const inicioDoDiaISO = inicioDoDia.toISOString();
         const fimDoDiaISO = fimDoDia.toISOString();
-        
+      
         if (id) {
-            const cardsRef = collection(this.firestore, 'cards');
-            const queryRef = query(
-                cardsRef, 
-                where('uid', '==', id),
-                where('data', '>=', inicioDoDiaISO),
-                where('data', '<', fimDoDiaISO)
-            );
-            return collectionData(queryRef, {idField: 'id'}).pipe(
-                map(cards => cards as {id: string, data: Cards, assunto: string}[])
-            );
+          const cardsRef = collection(this.firestore, 'cards');
+          const queryRef = query(
+            cardsRef,
+            where('uid', '==', id),
+            where('data', '>=', inicioDoDiaISO),
+            where('data', '<', fimDoDiaISO),
+            where('assunto', '==', assunto) // Adicione esta cláusula para filtrar pelo assunto
+          );
+          return collectionData(queryRef, { idField: 'id' }).pipe(
+            map(cards => cards as { id: string, data: Cards, assunto: string }[])
+          );
         } else {
-            let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
-            
-            const cardsHoje = localCards.filter((card: Cards) => {
-                const cardDate = this.timestampToDate(card.data); 
-                return cardDate >= inicioDoDia && cardDate < fimDoDia;
-            });
-    
-            return of(cardsHoje);
+          // Retorna um Observable vazio se não houver uid (usuário não autenticado)
+          return of([]);
         }
-    }    
+      }
+      
+      
 
     async hasCards(uid: string): Promise<boolean> {
         const cardsRef = collection(this.firestore, "cards");
