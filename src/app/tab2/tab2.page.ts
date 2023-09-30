@@ -69,7 +69,6 @@ export class Tab2Page implements OnDestroy {
       if (this.cardsEstudar.length > 0) {
         this.currentIndex = 0;
       }
-      console.log(this.cardsEstudar);
     });
   }
   
@@ -77,9 +76,8 @@ export class Tab2Page implements OnDestroy {
 
   ngOnInit() {
     this.assuntoService.getAssunto().subscribe((assunto) => {
-      this.assunto = assunto; // Atualize a variável local com o valor do serviço
-      this.refreshCards(); // Atualize os cards quando o assunto for alterado
-      console.log(this.assunto); // Mova o console.log para cá
+      this.assunto = assunto; 
+      this.refreshCards();
     });
   }  
   
