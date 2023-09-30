@@ -8,6 +8,7 @@ import { AuthService } from './auth.service';
 import { of } from 'rxjs';
 
 export interface Cards {
+    editando: boolean;
     assunto: string;
     id?: string;
     uid?: string | null;
@@ -20,6 +21,17 @@ export interface Cards {
     providedIn: 'root'
 })
 export class DataService {
+    atualizarCard(card: Cards): Promise<void> {
+        const { id, ...cardData } = card; // Removendo a propriedade 'id' da card
+        
+        if (id) {
+            const cardRef = doc(this.db, 'cards', id);
+            return setDoc(cardRef, cardData, { merge: true });
+        } else {
+            return Promise.reject(new Error('ID inválido')); // Retorna uma Promise rejeitada se o ID for inválido
+        }
+    }
+    
     db: any;
 
     constructor(private firestore: Firestore, private authService: AuthService) {
@@ -32,11 +44,15 @@ export class DataService {
         });
     }
 
-    getCards() {
+    getCards(): Observable<Cards[]> {
         const cardsRef = collection(this.firestore, 'cards');
         const queryRef = query(cardsRef, where('uid', '==', this.authService.uid));
-        return collectionData(queryRef);
-    }
+        
+        return collectionData(queryRef, { idField: 'id' }).pipe(
+          map(cards => cards as Cards[])
+        );
+      }
+          
 
     convertDateToFirebaseTimestamp(date: Date): string {
         return date.toISOString();
@@ -155,5 +171,19 @@ export class DataService {
     
             return of({ success: true });
         }
-    }    
+    }
+
+    updateCard(card: Cards): Promise<void> {
+        const { id, ...cardData } = card; // Removendo a propriedade 'id' da card
+        
+        if (id) {
+            const cardRef = doc(this.db, 'cards', id); // Adicione o ID como o segundo argumento
+            return setDoc(cardRef, cardData, { merge: true });
+        } else {
+            // Lide com o caso em que o ID é undefined ou null
+            return Promise.reject(new Error('ID inválido'));
+        }
+    }
+      
+      
 }

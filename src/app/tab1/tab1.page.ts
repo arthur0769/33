@@ -47,6 +47,7 @@ export class Tab1Page {
       resposta: this.resposta,
       assunto: this.assunto,
       data: new Date().toISOString(),
+      editando : false
     };
 
     await this.dataService.addCards(novaCarta);

@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { LoginModalComponent } from './login-modal.component';
 import { AuthService } from '../services/auth.service';
-
 import { CloudModalComponent } from '../cloud-modal/cloud-modal.component';
+import { EditarModalComponent } from './editar-modal.component';
 
 @Component({
   selector: 'app-tab3',
@@ -17,7 +17,7 @@ export class Tab3Page {
     public authService: AuthService,
     ) {}
 
-    async openCloudModal() {
+  async openCloudModal() {
     const modal = await this.modalController.create({
       component: CloudModalComponent,
       cssClass: 'cloud-modal',
@@ -32,6 +32,15 @@ export class Tab3Page {
     });
     return await modal.present();
   }
+
+  async openEditarModal() {
+    const modal = await this.modalController.create({
+      component: EditarModalComponent,
+      cssClass: 'editar-modal',
+    });
+    return await modal.present();
+  }
+
   
   logout() {
     this.authService.logout();

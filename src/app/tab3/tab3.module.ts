@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { Tab3PageRoutingModule } from './tab3-routing.module';
 import { LoginModalComponent } from './login-modal.component';
+import { EditarModalComponent } from './editar-modal.component';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { LoginModalComponent } from './login-modal.component';
   declarations: [
     Tab3Page,
     LoginModalComponent,
+    EditarModalComponent
   ]
 })
 export class Tab3PageModule {}
