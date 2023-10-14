@@ -9,6 +9,7 @@ import { DataService, Cards } from '../services/data.service';
 })
 export class EditarModalComponent {
   cards: Cards[] = [];
+  termoDePesquisa: string = '';
 
   constructor(private modalController: ModalController, private dataService: DataService) {}
 
@@ -25,7 +26,6 @@ export class EditarModalComponent {
   editarCard(card: Cards) {
     card.editando = true;
   }
-  
 
   salvarEdicao(card: Cards) {
     card.editando = false;
@@ -40,5 +40,19 @@ export class EditarModalComponent {
 
   fecharModal() {
     this.modalController.dismiss();
+  }
+
+  filtrarCards() {
+    const termo = this.termoDePesquisa.toLowerCase();
+
+    if (termo.trim() === '') {
+      // Se o campo de pesquisa estiver vazio, mostrar todas as cards
+      this.carregarCards();
+    } else {
+      // Filtrar cards com base no termo de pesquisa
+      this.cards = this.cards.filter(card => {
+        return card.pergunta.toLowerCase().includes(termo) || card.resposta.toLowerCase().includes(termo);
+      });
+    }
   }
 }

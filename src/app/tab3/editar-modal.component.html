@@ -12,6 +12,7 @@
     <ion-toolbar>
       <ion-title size="large"> Editar Cards </ion-title>
     </ion-toolbar>
+    <ion-searchbar placeholder="pesquisar" [(ngModel)]="termoDePesquisa" (ionChange)="filtrarCards()"></ion-searchbar>
   </ion-header>
 
   <ion-grid>
