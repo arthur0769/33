@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, UserCredential } from "@angular/fire/auth";
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, UserCredential, sendPasswordResetEmail } from "@angular/fire/auth";
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -61,5 +61,16 @@ export class AuthService {
                 this.uidChanged.next(null);
             }
         });
+    }
+
+
+    async resetPassword(email: string): Promise<void> {
+        try {
+            await sendPasswordResetEmail(this.auth, email);
+            // A redefinição de senha foi enviada com sucesso
+        } catch (error) {
+            console.error("Error during password reset:", error);
+            throw error; // Você pode lidar com o erro de outra forma, se necessário
+        }
     }
 }

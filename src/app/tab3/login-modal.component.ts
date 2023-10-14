@@ -45,7 +45,7 @@ export class LoginModalComponent implements OnInit {
       this.dismissModal();
       // Faça alguma ação após o registro, se necessário
     } else {
-      this.showAlert('Seu cadastro falhou', 'Por favor tente novamente!');
+      this.showAlert('Seu cadastro falhou', 'este email já foi cadastrado');
     }
   }
 
@@ -73,7 +73,55 @@ export class LoginModalComponent implements OnInit {
     await alert.present();
   }
 
+
+  async forgotPassword() {
+    const prompt = await this.alertController.create({
+      header: 'Esqueci minha senha',
+      message: "Digite seu endereço de e-mail para redefinir sua senha:",
+      inputs: [
+        {
+          name: 'email',
+          placeholder: 'E-mail',
+          type: 'email'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Enviar',
+          handler: async data => {
+            const loading = await this.loadingController.create();
+            await loading.present();
+  
+            try {
+            await this.authService.resetPassword(data.email);
+  
+              // Exiba uma mensagem de sucesso
+              this.showAlert('Sucesso', 'Um e-mail de redefinição de senha foi enviado para o seu endereço de e-mail.');
+            } catch (error) {
+              // Exiba uma mensagem de erro se a redefinição de senha falhar
+              this.showAlert('Erro', 'Ocorreu um erro ao redefinir a senha. Por favor, tente novamente mais tarde.');
+            } finally {
+              await loading.dismiss();
+            }
+          }
+        }
+      ]
+    });
+    await prompt.present();
+  }
+  
+
+
   dismissModal() {
     this.modalController.dismiss();
   }
+
+
+
 }

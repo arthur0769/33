@@ -19,16 +19,18 @@
     <form [formGroup]="credentials" (ngSubmit)="login()">
   
       <ion-item fill="solid" class="ion-margin-bottom">
-        <ion-input type="email" placeholder="Email" formControlName="email"></ion-input>
-        <ion-note slot="error" *ngIf="email?.invalid">Email inválido</ion-note>
+        <ion-input type="email" placeholder="email" formControlName="email"></ion-input>
+        <ion-note slot="error" *ngIf="email?.invalid && email?.touched">Email inválido</ion-note>
       </ion-item>
-  
+      
       <ion-item fill="solid" class="ion-margin-bottom">
-        <ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
-        <ion-note slot="error" *ngIf="password?.invalid">Senha inválida</ion-note>
+        <ion-input type="password" placeholder="senha" formControlName="password"></ion-input>
+        <ion-note slot="error" *ngIf="password?.invalid && password?.touched">Senha inválida</ion-note>
       </ion-item>
+      
   
       <ion-button expand="full" type="submit" [disabled]="!credentials.valid">Login</ion-button>
+      <ion-button expand="full" type="button" (click)="forgotPassword()">Esqueci minha senha</ion-button>
       <ion-button expand="full" type="button" (click)="register()">Criar conta</ion-button>
 
   
