@@ -11,12 +11,13 @@
     <ion-toolbar class="title-with-icon">
       <ion-title size="large">Criar</ion-title>
       
-      <!-- Ícone quando o usuário está OFFLINE (não logado) -->
-      <ion-icon button (click)="openCloudModal()" *ngIf="!authService.uid" class="right-icon" name="cloud-offline-outline"></ion-icon>
+        <ion-buttons slot="end">
+          <ion-icon button (click)="openCloudModal()" *ngIf="!authService.uid" class="right-icon" name="cloud-offline-outline"></ion-icon>
 
-      <!-- Ícone quando o usuário está ONLINE (logado) -->
-      <ion-icon button (click)="openCloudModal()" *ngIf="authService.uid" class="right-icon" name="cloud-outline"></ion-icon>
-      
+          <!-- Ícone quando o usuário está ONLINE (logado) -->
+          <ion-icon button (click)="openCloudModal()" *ngIf="authService.uid" class="right-icon" name="cloud-outline"></ion-icon>
+        </ion-buttons>
+
     </ion-toolbar>
   </ion-header>
 </ion-content>
