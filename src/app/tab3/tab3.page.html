@@ -22,6 +22,9 @@
   </ion-header>
 
   <br><br><br>
+
+  <input type="file" (change)="onFileSelected($event)">
+  <button (click)="importarCards()">Importar Cards</button>
   
   <ion-item button (click)="openLoginModal()">
     <ion-label>

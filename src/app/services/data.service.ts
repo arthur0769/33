@@ -21,6 +21,64 @@ export interface Cards {
     providedIn: 'root'
 })
 export class DataService {
+
+
+    
+
+
+    importarCardsDoAnki(arquivo: File): Promise<void> {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+    
+          reader.onload = (event) => {
+            try {
+              const conteudo: string = (event.target as FileReader).result as string;
+              const cardsDoAnki: any[] = JSON.parse(conteudo);
+    
+              if (Array.isArray(cardsDoAnki)) {
+                // Mapeie os dados do Anki para o formato do seu aplicativo, por exemplo:
+                const cardsFormatados: Cards[] = cardsDoAnki.map(cardAnki => {
+                  return {
+                    editando: false,
+                    assunto: cardAnki.assunto,
+                    pergunta: cardAnki.pergunta,
+                    resposta: cardAnki.resposta,
+                    data: this.convertDateToFirebaseTimestamp(new Date()) // Adapte conforme necessário
+                    // ... outros campos ou lógica conforme necessário
+                  };
+                });
+    
+                // Adicione os cards formatados ao Firebase ou onde você armazena os dados
+                cardsFormatados.forEach(card => {
+                  this.addCards(card).then(() => {
+                    console.log("Card do Anki importado com sucesso!");
+                  });
+                });
+    
+                resolve();
+              } else {
+                reject(new Error("Arquivo do Anki inválido."));
+              }
+            } catch (error) {
+              reject(error);
+            }
+          };
+    
+          reader.readAsText(arquivo);
+        });
+      }
+
+
+
+
+
+
+
+
+
+
+
+
     atualizarCard(card: Cards): Promise<void> {
         const { id, ...cardData } = card; // Removendo a propriedade 'id' da card
         
