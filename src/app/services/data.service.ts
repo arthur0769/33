@@ -172,44 +172,63 @@ export class DataService {
         const querySnapshot = await getDocs(queryRef);
         return !querySnapshot.empty;
       }
+
+
+    async getCardCountByUser(uid: string): Promise<number> {
+      const cardsRef = collection(this.firestore, 'cards');
+      const queryRef = query(cardsRef, where('uid', '==', uid));
+      const querySnapshot = await getDocs(queryRef);
+      return querySnapshot.size; // Retorna o número de cartas
+  }
+
+  
     
-    
-    addCards(cards: Cards) {
-        const isoDate = new Date().toISOString();
-        cards.data = isoDate;
-    
-        if (this.authService.uid) {
-            cards.uid = this.authService.uid;
-            const cardsRef = collection(this.firestore, 'cards');
-            return addDoc(cardsRef, cards).then(() => {
-                console.log("Card adicionado em:", this.formatTimestampToReadableDate(cards.data));
-            });
+  addCards(cards: Cards) {
+    const isoDate = new Date().toISOString();
+    cards.data = isoDate;
+   
+    if (this.authService.uid) {
+      cards.uid = this.authService.uid;
+      return this.getCardCountByUser(this.authService.uid).then((count) => {
+        if (count < 10) {
+          const cardsRef = collection(this.firestore, 'cards');
+          return addDoc(cardsRef, cards).then(() => {
+            console.log("Card adicionado em:", this.formatTimestampToReadableDate(cards.data));
+          });
         } else {
-            const cardId = 'local_' + new Date().getTime();
-            cards.id = cardId;
-            let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
-            localCards.push(cards);
-            localStorage.setItem('localCards', JSON.stringify(localCards));
-            
-            console.log("Card armazenado localmente em:", this.formatTimestampToReadableDate(cards.data));
-            return Promise.resolve();
+          console.log("Limite de cards atingido");
+          return Promise.reject("Limite de cards atingido");
         }
+      });
+    } else {
+      const cardId = 'local_' + new Date().getTime();
+      cards.id = cardId;
+      let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
+      localCards.push(cards);
+      localStorage.setItem('localCards', JSON.stringify(localCards));
+      
+      console.log("Card armazenado localmente em:", this.formatTimestampToReadableDate(cards.data));
+      return Promise.resolve();
     }
-    
+   }   
+   
 
-    private syncLocalCardsWithFirebase() {
-        let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
 
-        if (localCards.length > 0) {
-            localCards.forEach((card: Cards) => {
-                delete card.id;
-                this.addCards(card).then(() => {
-                    console.log("Card sincronizado em:", this.formatTimestampToReadableDate(card.data));
-                });
+private syncLocalCardsWithFirebase() {
+    let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
+
+    if (localCards.length > 0) {
+        localCards.forEach((card: Cards) => {
+            delete card.id;
+            this.addCards(card).then(() => {
+                console.log("Card sincronizado em:", this.formatTimestampToReadableDate(card.data));
             });
-            localStorage.removeItem('localCards');
-        }
+        });
+        localStorage.removeItem('localCards');
     }
+}
+  
+  
 
     updateCardData(id: string, oldData: string, dias: number): Observable<any> {
         const novaData = new Date(oldData);

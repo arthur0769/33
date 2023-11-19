@@ -22,9 +22,6 @@
   </ion-header>
 
   <br><br><br>
-
-  <input type="file" (change)="onFileSelected($event)">
-  <button (click)="importarCards()">Importar Cards</button>
   
   <ion-item button (click)="openLoginModal()">
     <ion-label>
@@ -42,8 +39,10 @@
   
   <ion-item button detail="false">
     <ion-label>
-      <h2>opcao 3</h2>
-      <p>texto</p>
+      
+      <h2 (click)="importarCards()">Importar Cards</h2>
+      <input type="file" (change)="onFileSelected($event)">
+      <p>importe suas cards do Anki</p>
     </ion-label>
   </ion-item>
   
