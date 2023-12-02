@@ -2,7 +2,7 @@
 
 
 .card-container {
-      bottom: 10%;
+      margin-bottom: 15%;
   }
 
   .title-with-icon {
@@ -18,8 +18,18 @@
     transform: translateY(-50%);
 }
 
+.assunto{
+  margin-top: 5%;
+}
+
+
+
 @media screen and (max-width: 768px) {
     .card-container {
-      bottom: 0%;
+      margin-bottom: 50%;
+    }
+
+    .assunto{
+      margin-top: 10%;
     }
   }
