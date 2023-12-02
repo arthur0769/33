@@ -27,6 +27,16 @@ export class EditarModalComponent {
     card.editando = true;
   }
 
+  excluirCard(card: Cards) {
+    this.dataService.excluirCard(card)
+      .then(() => {
+        this.carregarCards();
+      })
+      .catch((error: any) => {
+        console.error("Erro ao excluir card:", error);
+      });
+   }   
+
   salvarEdicao(card: Cards) {
     card.editando = false;
     this.dataService.atualizarCard(card)

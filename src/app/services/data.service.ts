@@ -261,6 +261,12 @@ private syncLocalCardsWithFirebase() {
             return Promise.reject(new Error('ID inválido'));
         }
     }
+
+
+    excluirCard(card: Cards) {
+      return this.db.collection('cards').doc(card.id).delete();
+     }     
+     
       
       
 }

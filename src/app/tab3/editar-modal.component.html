@@ -28,7 +28,8 @@
           <ion-card-content class="editando" *ngIf="card.editando">
             <ion-input [(ngModel)]="card.pergunta"></ion-input>
             <ion-input [(ngModel)]="card.resposta"></ion-input>
-            <ion-button expand="full" (click)="salvarEdicao(card)">Salvar</ion-button>
+            <ion-button (click)="salvarEdicao(card)">Salvar</ion-button>
+            <ion-icon name="trash-outline" (click)="excluirCard(card)"></ion-icon>
           </ion-card-content>
           
         </ion-card>
