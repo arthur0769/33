@@ -2,7 +2,7 @@
 
 
 .card-container {
-      margin-bottom: 15%;
+      margin-bottom: 10%;
   }
 
   .title-with-icon {
@@ -22,9 +22,10 @@
   margin-top: 5%;
 }
 
-@media screen and (max-width: 768px) {
+
+@media screen and (max-width: 1024px) {
   .card-container {
-    margin-bottom: 50%;
+    bottom: 20%;
   }
 
   .assunto{
