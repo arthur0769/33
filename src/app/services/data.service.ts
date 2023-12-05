@@ -103,14 +103,19 @@ export class DataService {
     }
 
     getCards(): Observable<Cards[]> {
-        const cardsRef = collection(this.firestore, 'cards');
-        const queryRef = query(cardsRef, where('uid', '==', this.authService.uid));
-        
-        return collectionData(queryRef, { idField: 'id' }).pipe(
-          map(cards => cards as Cards[])
-        );
-      }
-          
+      const cardsRef = collection(this.firestore, 'cards');
+      const queryRef = query(cardsRef, where('uid', '==', this.authService.uid));
+      
+      // Recupera os cards do armazenamento local
+      const localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
+      
+      return collectionData(queryRef, { idField: 'id' }).pipe(
+        map(cards => {
+          // Combina os cards do Firestore com os cards do armazenamento local
+          return [...cards, ...localCards] as Cards[];
+        })
+      );
+   }    
 
     convertDateToFirebaseTimestamp(date: Date): string {
         return date.toISOString();
@@ -137,32 +142,46 @@ export class DataService {
         return new Intl.DateTimeFormat('pt-BR', options).format(date);
     }
 
+
     getCardsHoje(assunto: string): Observable<{ id: string; data: Cards; assunto: string }[]> {
-        const id = this.authService.uid;
-        const agora = new Date();
-        const inicioDoDia = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
-        const fimDoDia = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate() + 1);
-      
-        const inicioDoDiaISO = inicioDoDia.toISOString();
-        const fimDoDiaISO = fimDoDia.toISOString();
-      
-        if (id) {
-          const cardsRef = collection(this.firestore, 'cards');
-          const queryRef = query(
-            cardsRef,
-            where('uid', '==', id),
-            where('data', '>=', inicioDoDiaISO),
-            where('data', '<', fimDoDiaISO),
-            where('assunto', '==', assunto) // Adicione esta cláusula para filtrar pelo assunto
-          );
-          return collectionData(queryRef, { idField: 'id' }).pipe(
-            map(cards => cards as { id: string, data: Cards, assunto: string }[])
-          );
-        } else {
-          // Retorna um Observable vazio se não houver uid (usuário não autenticado)
-          return of([]);
-        }
+      const id = this.authService.uid;
+      const agora = new Date();
+      const inicioDoDia = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+      const fimDoDia = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate() + 1);
+     
+      const inicioDoDiaISO = inicioDoDia.toISOString();
+      const fimDoDiaISO = fimDoDia.toISOString();
+     
+      if (id) {
+        const cardsRef = collection(this.firestore, 'cards');
+        const queryRef = query(
+          cardsRef,
+          where('uid', '==', id),
+          where('data', '>=', inicioDoDiaISO),
+          where('data', '<', fimDoDiaISO),
+          where('assunto', '==', assunto)
+        );
+        return collectionData(queryRef, { idField: 'id' }).pipe(
+          map(cards => cards as { id: string, data: Cards, assunto: string }[])
+        );
+      } else {
+        let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
+
+        // Filtrar os cartões locais por data
+        const cartoesFiltrados = localCards.filter((card: { data: string | number | Date; }) => {
+          const cardDate = new Date(card.data); // Assumindo que 'data' seja a propriedade que contém a data do cartão
+          return cardDate >= inicioDoDia && cardDate < fimDoDia;
+        });
+    
+        return new Observable(observer => {
+          // Retorne os cartões filtrados
+          observer.next(cartoesFiltrados);
+          observer.complete();
+        });
       }
+    }
+    
+     
       
       
 
