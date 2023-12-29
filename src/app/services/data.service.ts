@@ -166,20 +166,30 @@ export class DataService {
         );
       } else {
         let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
-
-        // Filtrar os cartões locais por data
-        const cartoesFiltrados = localCards.filter((card: { data: string | number | Date; }) => {
-          const cardDate = new Date(card.data); // Assumindo que 'data' seja a propriedade que contém a data do cartão
-          return cardDate >= inicioDoDia && cardDate < fimDoDia;
+        
+        // Filtrar os cartões locais por data e assunto
+        const cartoesFiltrados = localCards.filter((card: Cards) => {
+          const cardDate = new Date(card.data);
+          return cardDate >= inicioDoDia && cardDate < fimDoDia && card.assunto === assunto;
         });
+        
+        // Mapear os cartões filtrados para retornar com ID, dados e assunto
+        const cartoesMapeados = cartoesFiltrados.map((card: Cards) => ({
+          id: card.id || '', // Garante que o ID está presente ou define como string vazia
+          data: card,
+          assunto: card.assunto,
+          pergunta: card.pergunta,
+          resposta: card.resposta
+        }));
     
         return new Observable(observer => {
-          // Retorne os cartões filtrados
-          observer.next(cartoesFiltrados);
+          // Retorne os cartões filtrados com ID, dados e assunto
+          observer.next(cartoesMapeados);
           observer.complete();
         });
       }
     }
+     
     
      
       
