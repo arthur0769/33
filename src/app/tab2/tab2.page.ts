@@ -209,14 +209,11 @@ export class Tab2Page implements OnDestroy {
           this.refreshCards();
         });
       } else {
-        const novaData = new Date(currentCard.data);
-        novaData.setDate(novaData.getDate() + 5);
         this.dataService.updateLocalCardData(currentCard.id, currentCard.data, 5);
-        this.cardsEstudar[this.currentIndex].data = novaData.toISOString();
         this.refreshCards();
       }
     }
-  }  
+  }
 
   adicionar3Dias() {
     const currentCard = this.cardsEstudar[this.currentIndex];
@@ -226,10 +223,7 @@ export class Tab2Page implements OnDestroy {
           this.refreshCards();
         });
       } else {
-        const novaData = new Date(currentCard.data);
-        novaData.setDate(novaData.getDate() + 3);
         this.dataService.updateLocalCardData(currentCard.id, currentCard.data, 3);
-        this.cardsEstudar[this.currentIndex].data = novaData.toISOString();
         this.refreshCards();
       }
     }
