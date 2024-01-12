@@ -70,6 +70,7 @@ export class Tab2Page implements OnDestroy {
         this.currentIndex = 0;
       }
     });
+    console.log(this.cardsEstudar)
   }
   
 
@@ -203,36 +204,48 @@ export class Tab2Page implements OnDestroy {
   adicionar5Dias() {
     const currentCard = this.cardsEstudar[this.currentIndex];
     if (currentCard) {
-      this.dataService.updateCardData(currentCard.id, currentCard.data, 5).subscribe(() => {
-        const novaData = new Date(currentCard.data.seconds * 1000 + currentCard.data.nanoseconds / 1000000);
+      if (this.authService.uid) {
+        this.dataService.updateCardData(currentCard.id, currentCard.data, 5).subscribe(() => {
+          this.refreshCards();
+        });
+      } else {
+        const novaData = new Date(currentCard.data);
         novaData.setDate(novaData.getDate() + 5);
-        this.cardsEstudar[this.currentIndex] = { ...currentCard, data: novaData };
+        this.dataService.updateLocalCardData(currentCard.id, currentCard.data, 5);
+        this.cardsEstudar[this.currentIndex].data = novaData.toISOString();
         this.refreshCards();
-      });
+      }
     }
-  }
+  }  
 
   adicionar3Dias() {
     const currentCard = this.cardsEstudar[this.currentIndex];
     if (currentCard) {
-      this.dataService.updateCardData(currentCard.id, currentCard.data, 3).subscribe(() => {
-        const novaData = new Date(currentCard.data.seconds * 1000 + currentCard.data.nanoseconds / 1000000);
+      if (this.authService.uid) {
+        this.dataService.updateCardData(currentCard.id, currentCard.data, 3).subscribe(() => {
+          this.refreshCards();
+        });
+      } else {
+        const novaData = new Date(currentCard.data);
         novaData.setDate(novaData.getDate() + 3);
-        this.cardsEstudar[this.currentIndex] = { ...currentCard, data: novaData };
+        this.dataService.updateLocalCardData(currentCard.id, currentCard.data, 3);
+        this.cardsEstudar[this.currentIndex].data = novaData.toISOString();
         this.refreshCards();
-      });
+      }
     }
   }
-
+  
   adicionar1Dia() {
     const currentCard = this.cardsEstudar[this.currentIndex];
     if (currentCard) {
-      this.dataService.updateCardData(currentCard.id, currentCard.data, 1).subscribe(() => {
-        const novaData = new Date(currentCard.data.seconds * 1000 + currentCard.data.nanoseconds / 1000000);
-        novaData.setDate(novaData.getDate() + 1);
-        this.cardsEstudar[this.currentIndex] = { ...currentCard, data: novaData };
+      if (this.authService.uid) {
+        this.dataService.updateCardData(currentCard.id, currentCard.data, 1).subscribe(() => {
+          this.refreshCards();
+        });
+      } else {
+        this.dataService.updateLocalCardData(currentCard.id, currentCard.data, 1);
         this.refreshCards();
-      });
+      }
     }
   }
 }

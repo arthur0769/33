@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DataService } from '../services/data.service';
+import { Cards, DataService } from '../services/data.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { SharedService } from '../services/SharedService';
@@ -20,6 +20,7 @@ export class Tab1Page {
   resposta: string;
 
   private _assunto: string = "geral";
+  cards: { editando: boolean; assunto: string; id?: string | undefined; uid?: string | null | undefined; pergunta: string; resposta: string; data: string; }[];
   
   get assunto(): string {
     return this._assunto;
@@ -70,7 +71,13 @@ export class Tab1Page {
     this.assunto = newAssunto;
     // Atualize o assunto no serviço sempre que o usuário o alterar
     this.assuntoService.setAssunto(this.assunto);
+  
+    // Chame a função para carregar os cards do novo assunto selecionado
+    this.dataService.getCardsHoje(this.assunto).subscribe((cards: { id: string; data: Cards; assunto: string }[]) => {
+      this.cards = cards.map(card => ({...card.data, editando: false}));
+    });
   }
+  
 
   ngOnInit() {
     this.updatePrimaryColor(); 

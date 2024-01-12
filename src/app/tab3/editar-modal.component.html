@@ -5,26 +5,26 @@
       Editar Cards
     </ion-title>
   </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
+ </ion-header>
+ 
+ <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large"> Editar Cards </ion-title>
     </ion-toolbar>
     <ion-searchbar placeholder="pesquisar" [(ngModel)]="termoDePesquisa" (ionChange)="filtrarCards()"></ion-searchbar>
   </ion-header>
-
+ 
   <ion-grid>
     <ion-row>
-      <ion-col size="6" *ngFor="let card of cards">
+      <ion-col size="6" *ngFor="let card of cardsFiltradas">
         <ion-card class="custom-card" (click)="editarCard(card)">
-
+ 
           <ion-card-content *ngIf="!card.editando">
             <h3>{{ card.pergunta }}</h3>
             <p>{{ card.resposta }}</p>
           </ion-card-content>
-
+ 
           <ion-card-content class="editando" *ngIf="card.editando">
             <ion-input [(ngModel)]="card.pergunta"></ion-input>
             <ion-input [(ngModel)]="card.resposta"></ion-input>
@@ -37,6 +37,5 @@
     </ion-row>
   </ion-grid>
   
-  
-
-</ion-content>
+ </ion-content>
+ 

@@ -43,7 +43,7 @@ export class DataService {
                     assunto: cardAnki.assunto,
                     pergunta: cardAnki.pergunta,
                     resposta: cardAnki.resposta,
-                    data: this.convertDateToFirebaseTimestamp(new Date()) // Adapte conforme necessário
+                    data: this.convertDateToString(new Date()) // Adapte conforme necessário
                     // ... outros campos ou lógica conforme necessário
                   };
                 });
@@ -102,28 +102,41 @@ export class DataService {
         });
     }
 
-    getCards(): Observable<Cards[]> {
+    isValidISODate(str: string) {
+      const regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+      return regex.test(str);
+    }    
+
+    getCards(assunto: string): Observable<Cards[]> {
       const cardsRef = collection(this.firestore, 'cards');
       const queryRef = query(cardsRef, where('uid', '==', this.authService.uid));
-      
+     
       // Recupera os cards do armazenamento local
       const localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
-      
+     
       return collectionData(queryRef, { idField: 'id' }).pipe(
         map(cards => {
           // Combina os cards do Firestore com os cards do armazenamento local
-          return [...cards, ...localCards] as Cards[];
+          let allCards = [...cards, ...localCards] as Cards[];
+     
+          // Aplica a filtragem
+          if (assunto !== '') {
+            allCards = allCards.filter(card => card.assunto === assunto);
+          }
+     
+          return allCards;
         })
       );
-   }    
+     }
+      
 
-    convertDateToFirebaseTimestamp(date: Date): string {
-        return date.toISOString();
-    }
+     convertDateToString(date: Date): string {
+      return date.toISOString();
+    }    
 
-    timestampToDate(isoDate: string): Date {
-        return new Date(isoDate);
-    }
+      timestampToDate(isoDate: string): Date {
+      return new Date(isoDate);
+  }
 
     formatTimestampToReadableDate(isoDate: string): string {
         const date = this.timestampToDate(isoDate);
@@ -213,7 +226,7 @@ export class DataService {
   
     
   addCards(cards: Cards) {
-    const isoDate = new Date().toISOString();
+    const isoDate = this.convertDateToString(new Date()); // Obtém a data no formato ISO 8601
     cards.data = isoDate;
    
     if (this.authService.uid) {
@@ -260,24 +273,56 @@ private syncLocalCardsWithFirebase() {
   
 
     updateCardData(id: string, oldData: string, dias: number): Observable<any> {
-        const novaData = new Date(oldData);
-        novaData.setDate(novaData.getDate() + dias);
+      if (!this.isValidISODate(oldData)) {
+        throw new Error('Invalid ISO date');
+      }
+      const cardDate = this.timestampToDate(oldData); // Converte a string ISO 8601 para objeto Date
     
-        if (this.authService.uid) {
-            const cardRef = doc(this.firestore, 'cards', id);
-            return from(setDoc(cardRef, { data: novaData.toISOString() }, { merge: true }));
-        } else {
-            let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
-            const cardIndex = localCards.findIndex((card: { id: string; }) => card.id === id);
+      cardDate.setDate(cardDate.getDate() + dias);
     
-            if (cardIndex !== -1) {
-                localCards[cardIndex].data = novaData.toISOString();
-                localStorage.setItem('localCards', JSON.stringify(localCards));
-            }
+      const formattedDate = this.convertDateToString(cardDate); // Converte de volta para string ISO 8601
     
-            return of({ success: true });
-        }
+      if (this.authService.uid) {
+          const cardRef = doc(this.firestore, 'cards', id);
+          return from(setDoc(cardRef, { data: formattedDate }, { merge: true }));
+          // Atualização no Firebase usando a mesma formatação de data
+      } else {
+          let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
+          const cardIndex = localCards.findIndex((card: { id: string; }) => card.id === id);
+    
+          if (cardIndex !== -1) {
+              localCards[cardIndex].data = formattedDate; // Usando a mesma formatação de data
+              localStorage.setItem('localCards', JSON.stringify(localCards));
+          }
+    
+          return of({ success: true });
+          // Atualização local com a mesma formatação de data
+      }
     }
+    
+    updateLocalCardData(id: string, oldData: any, dias: number): void {
+      
+      let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
+      const cardIndex = localCards.findIndex((card: { id: string }) => card.id === id);
+    
+      if (cardIndex !== -1) {
+        const cardDate = this.timestampToDate(oldData.data);
+        console.log(cardDate)
+        cardDate.setDate(cardDate.getDate() + dias);
+        const formattedDate = this.convertDateToString(cardDate);
+    
+        localCards[cardIndex].data = formattedDate;
+        localStorage.setItem('localCards', JSON.stringify(localCards));
+        console.log(cardDate)
+      }
+    }    
+    
+
+    
+    
+   
+
+
 
     updateCard(card: Cards): Promise<void> {
         const { id, ...cardData } = card; // Removendo a propriedade 'id' da card
