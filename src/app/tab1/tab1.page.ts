@@ -93,12 +93,12 @@ export class Tab1Page {
         primaryColorDark = '#ffffff';
         break;
       case 'ingles':
-        primaryColor = '#00a5b4';
-        primaryColorDark = '#00a5b4';
+        primaryColor = '#ff0000';
+        primaryColorDark = '#ff0000';
         break;
       case 'espanhol':
-        primaryColor = '#f5c400';
-        primaryColorDark = '#f5c400';
+        primaryColor = '#ffff00';
+        primaryColorDark = '#ffff00';
         break;
       default:
         primaryColor = '#000000';
@@ -110,4 +110,5 @@ export class Tab1Page {
     document.documentElement.style.setProperty('--ion-color-primary', primaryColor);
     document.documentElement.style.setProperty('--ion-color-primary-dark', primaryColorDark);
   }
+
 }
