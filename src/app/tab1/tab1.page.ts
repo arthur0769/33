@@ -8,6 +8,7 @@ import { CloudModalComponent } from '../cloud-modal/cloud-modal.component';
 import { Renderer2 } from '@angular/core';
 import { AssuntoService } from '../services/assunto.service';
 
+
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
@@ -53,6 +54,8 @@ export class Tab1Page {
 
     await this.dataService.addCards(novaCarta);
     this.sharedService.refreshCards();
+
+  
 
     // Limpar os campos de pergunta e resposta após adicionar a carta
     this.pergunta = '';
