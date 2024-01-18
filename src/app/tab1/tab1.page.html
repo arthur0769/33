@@ -62,8 +62,8 @@
   <ion-card-content>
 
     
-    <ion-input [(ngModel)]="pergunta" label="pergunta" placeholder="pergunta"></ion-input>
-    <ion-input [(ngModel)]="resposta" label="resposta" placeholder="resposta"></ion-input>
+    <ion-input [(ngModel)]="pergunta" label="pergunta" placeholder="pergunta" maxlength="100"></ion-input>
+    <ion-input [(ngModel)]="resposta" label="resposta" placeholder="resposta" maxlength="100"></ion-input>
 
     <ion-button (click)="addCards()" [disabled]="false">
       <strong>Adicionar</strong>
