@@ -23,7 +23,7 @@
 
   <br><br><br>
   
-  <ion-item button (click)="openLoginModal()">
+  <ion-item button (click)="openLoginModal()" *ngIf="!authService.uid">
     <ion-label>
       <h2>Login</h2>
       <p>conectar ou criar conta</p>
@@ -54,7 +54,7 @@
     </ion-label>
   </ion-item>
 
-  <ion-item id="sair" button detail="false" detail-icon="caret-forward-outline" (click)="logout()">
+  <ion-item id="sair" button detail="false" detail-icon="caret-forward-outline" *ngIf="authService.uid" (click)="logout()">
     <ion-label>
       <h2>Sair</h2>
       <p>desconectar</p>
