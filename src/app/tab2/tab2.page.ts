@@ -67,16 +67,9 @@ export class Tab2Page implements OnDestroy {
       if (this.cardsEstudar.length > 0) {
         this.currentIndex = 0;
       }
-      
-      // Adiciona um atraso após a atualização dos cards
-      setTimeout(() => {
-        // Lógica adicional, se necessário, a ser executada após o atraso
-        console.log(this.cardsEstudar);
-      }, 500); // Ajuste o valor do tempo de espera conforme necessário
     });
   }
 
-  
 
   ngOnInit() {
     this.assuntoService.getAssunto().subscribe((assunto) => {
