@@ -11,6 +11,8 @@
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large"> Editar Cards </ion-title>
+
+      <ion-icon slot="end" name="trash" size="large" (click)="excluirTodasCard()"></ion-icon>
     </ion-toolbar>
     <ion-searchbar placeholder="pesquisar" [(ngModel)]="termoDePesquisa" (ionChange)="filtrarCards()"></ion-searchbar>
   </ion-header>
@@ -29,7 +31,7 @@
             <ion-input [(ngModel)]="card.pergunta"></ion-input>
             <ion-input [(ngModel)]="card.resposta"></ion-input>
             <ion-button (click)="salvarEdicao(card)">Salvar</ion-button>
-            <ion-icon name="trash-outline" (click)="excluirCard(card)" size="large" class="lixeira" ></ion-icon>
+            <ion-button (click)="excluirCard(card)">Excluir</ion-button>
           </ion-card-content>
           
         </ion-card>

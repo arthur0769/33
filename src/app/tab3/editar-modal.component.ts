@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { DataService, Cards } from '../services/data.service';
 import { AssuntoService } from '../services/assunto.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
  selector: 'app-editar-modal',
@@ -17,7 +18,8 @@ export class EditarModalComponent {
  constructor(
   private modalController: ModalController,
   private dataService: DataService,
-  private assuntoService: AssuntoService
+  private assuntoService: AssuntoService,
+  private alertController: AlertController
  ) {
   this.assuntoService.getAssunto().subscribe((assunto: string) => {
     this.assuntoSelecionado = assunto;
@@ -37,14 +39,51 @@ export class EditarModalComponent {
  }
 
  excluirCard(card: Cards) {
-  this.dataService.excluirCard(card)
+  // Chama a função deleteCard do DataService passando o id da carta
+  this.dataService.deleteCard(card.id)
     .then(() => {
-      this.carregarCards();
+      console.log('Card excluído com sucesso!');
+      this.carregarCards(); // Recarrega a lista após a exclusão
     })
     .catch((error: any) => {
       console.error("Erro ao excluir card:", error);
     });
  }
+
+
+ async excluirTodasCard() {
+  const assunto = this.assuntoSelecionado;
+
+  const confirmAlert = await this.alertController.create({
+    header: 'Confirmar Exclusão',
+    message: `Tem certeza que deseja excluir todas as cards do assunto "${assunto}"?`,
+    buttons: [
+      {
+        text: 'Cancelar',
+        role: 'cancel',
+        cssClass: 'secondary',
+        handler: () => {
+          console.log('Exclusão cancelada');
+        }
+      },
+      {
+        text: 'Excluir',
+        handler: () => {
+          this.dataService.deleteCardsByAssunto(assunto)
+            .then(() => {
+              console.log(`Todas as cards do assunto "${assunto}" foram excluídas com sucesso!`);
+              this.carregarCards();
+            })
+            .catch((error: any) => {
+              console.error("Erro ao excluir cards:", error);
+            });
+        }
+      }
+    ]
+  });
+
+  await confirmAlert.present();
+}
 
  salvarEdicao(card: Cards) {
   card.editando = false;

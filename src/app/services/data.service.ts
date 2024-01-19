@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Firestore, collectionData, addDoc, setDoc, doc, getDocs, getDoc } from "@angular/fire/firestore";
+import { Firestore, collectionData, addDoc, setDoc, doc, getDocs, getDoc, deleteDoc } from "@angular/fire/firestore";
 import { DocumentSnapshot, and, collection } from "firebase/firestore";
 import { query, where } from 'firebase/firestore';
 import { map, retry } from 'rxjs/operators';
@@ -316,12 +316,6 @@ private syncLocalCardsWithFirebase() {
         console.log(cardDate)
       }
     }    
-    
-
-    
-    
-   
-
 
 
     updateCard(card: Cards): Promise<void> {
@@ -336,11 +330,54 @@ private syncLocalCardsWithFirebase() {
         }
     }
 
+    deleteCard(id: any): Promise<void> {
+      if (this.authService.uid) {
+        const cardRef = doc(this.firestore, 'cards', id);
+        return deleteDoc(cardRef);
+      } else {
+        let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
+        const cardIndex = localCards.findIndex((card: { id: string; }) => card.id === id);
+    
+        if (cardIndex !== -1) {
+          localCards.splice(cardIndex, 1); // Remove o card do array local
+          localStorage.setItem('localCards', JSON.stringify(localCards));
+          return Promise.resolve();
+        } else {
+          return Promise.reject(new Error('ID inválido'));
+        }
+      }
+    }
 
-    excluirCard(card: Cards) {
-      return this.db.collection('cards').doc(card.id).delete();
-     }     
-     
+    async deleteCardsByAssunto(assunto: string): Promise<void> {
+      const uid = this.authService.uid;
+    
+      if (uid) {
+        await this.deleteFirebaseCards(uid, assunto);
+        console.log(`Todas as cards do assunto "${assunto}" foram excluídas do Firestore com sucesso.`);
+      } else {
+        this.deleteLocalCards(assunto);
+        console.log(`Todas as cards do assunto "${assunto}" foram excluídas localmente.`);
+      }
+    }
+    
+    private async deleteFirebaseCards(uid: string, assunto: string): Promise<void> {
+      const cardsRef = collection(this.firestore, "cards");
+      const queryRef = query(cardsRef, where("uid", "==", uid), where("assunto", "==", assunto));
+      const querySnapshot = await getDocs(queryRef);
+    
+      querySnapshot.forEach(async (doc) => {
+        await deleteDoc(doc.ref);
+      });
+    }
+    
+    private deleteLocalCards(assunto: string): void {
+      let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
+      localCards = localCards.filter((card: Cards) => card.assunto !== assunto);
+      localStorage.setItem('localCards', JSON.stringify(localCards));
+    }
+      
+      
+  
       
       
 }
