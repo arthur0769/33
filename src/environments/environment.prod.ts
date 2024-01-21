@@ -1,13 +1,12 @@
 export const environment = {
   firebase: {
-    projectId: 'app-cards-23f24',
-    appId: '1:595414523963:web:9358ea627a9ae01b16bc1e',
-    storageBucket: 'app-cards-23f24.appspot.com',
-    locationId: 'southamerica-east1',
-    apiKey: 'AIzaSyBKx9mfFLw1SSZ1oBPIRFmDFY1zyW7tleE',
-    authDomain: 'app-cards-23f24.firebaseapp.com',
-    messagingSenderId: '595414523963',
-    measurementId: 'G-DF0R1W19YC',
+    apiKey: "AIzaSyDTq-C8a2278sIf3sdGdf4YrbX4na9sWxA",
+    authDomain: "app-33-ff967.firebaseapp.com",
+    projectId: "app-33-ff967",
+    storageBucket: "app-33-ff967.appspot.com",
+    messagingSenderId: "284929964006",
+    appId: "1:284929964006:web:71d95a3c7e6e959bca4827",
+    measurementId: "G-Z67S4V4LL6"
   },
   production: true
 };
