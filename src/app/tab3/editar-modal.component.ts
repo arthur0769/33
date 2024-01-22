@@ -3,6 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { DataService, Cards } from '../services/data.service';
 import { AssuntoService } from '../services/assunto.service';
 import { AlertController } from '@ionic/angular';
+import { SharedService } from '../services/SharedService';
 
 @Component({
  selector: 'app-editar-modal',
@@ -16,6 +17,7 @@ export class EditarModalComponent {
  termoDePesquisa: string = '';
 
  constructor(
+  private sharedService: SharedService,
   private modalController: ModalController,
   private dataService: DataService,
   private assuntoService: AssuntoService,
@@ -73,6 +75,7 @@ export class EditarModalComponent {
             .then(() => {
               console.log(`Todas as cards do assunto "${assunto}" foram excluídas com sucesso!`);
               this.carregarCards();
+              this.sharedService.refreshCards();
             })
             .catch((error: any) => {
               console.error("Erro ao excluir cards:", error);
@@ -90,6 +93,7 @@ export class EditarModalComponent {
   this.dataService.atualizarCard(card)
     .then(() => {
       this.carregarCards();
+      this.sharedService.refreshCards();
     })
     .catch((error: any) => {
       console.error("Erro ao atualizar card:", error);
@@ -98,6 +102,7 @@ export class EditarModalComponent {
 
  fecharModal() {
   this.modalController.dismiss();
+  this.sharedService.refreshCards();
  }
 
  filtrarCards() {

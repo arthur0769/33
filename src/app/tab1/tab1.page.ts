@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { Cards, DataService } from '../services/data.service';
 import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from '../services/SharedService';
 import { ModalController } from '@ionic/angular';
 import { CloudModalComponent } from '../cloud-modal/cloud-modal.component';
 import { Renderer2 } from '@angular/core';
 import { AssuntoService } from '../services/assunto.service';
-
 
 @Component({
   selector: 'app-tab1',
@@ -39,9 +38,13 @@ export class Tab1Page {
     public authService: AuthService,
     private modalController: ModalController,
     private router: Router,
+    private route: ActivatedRoute,
     private renderer: Renderer2,
     private assuntoService: AssuntoService
   ) {}
+
+  
+
 
   async addCards() {
     const novaCarta = {

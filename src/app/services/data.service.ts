@@ -209,19 +209,37 @@ export class DataService {
       
 
     async hasCards(uid: string): Promise<boolean> {
-        const cardsRef = collection(this.firestore, "cards");
+        const cardsRef = collection(this.firestore, 'cards');
         const queryRef = query(cardsRef, where("uid", "==", uid));
         const querySnapshot = await getDocs(queryRef);
         return !querySnapshot.empty;
       }
 
 
-    async getCardCountByUser(uid: string): Promise<number> {
-      const cardsRef = collection(this.firestore, 'cards');
-      const queryRef = query(cardsRef, where('uid', '==', uid));
-      const querySnapshot = await getDocs(queryRef);
-      return querySnapshot.size; // Retorna o número de cartas
-  }
+      //usar esta com a skeleton
+
+      async getCardCountByUser(id: any) {
+
+        let count = 0;
+
+        // Verifique se o usuário está logado
+        if (this.authService.uid) {
+           // Se o usuário estiver logado, busque os cards do Firestore
+           const cardsRef = collection(this.firestore, 'cards');
+           const queryRef = query(cardsRef, where('uid', '==', id));
+           const querySnapshot = await getDocs(queryRef);
+           count += querySnapshot.size;
+        } else {
+           // Se o usuário não estiver logado, busque os cards locais
+           const localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
+           count += localCards.length;
+        }
+       
+        console.log(count)
+        return count;
+       }       
+       
+       
 
   
     
@@ -361,7 +379,7 @@ private syncLocalCardsWithFirebase() {
     }
     
     private async deleteFirebaseCards(uid: string, assunto: string): Promise<void> {
-      const cardsRef = collection(this.firestore, "cards");
+      const cardsRef = collection(this.firestore, 'cards');
       const queryRef = query(cardsRef, where("uid", "==", uid), where("assunto", "==", assunto));
       const querySnapshot = await getDocs(queryRef);
     

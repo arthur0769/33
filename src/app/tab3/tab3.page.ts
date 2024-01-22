@@ -6,6 +6,7 @@ import { CloudModalComponent } from '../cloud-modal/cloud-modal.component';
 import { EditarModalComponent } from './editar-modal.component';
 import { DataService } from '../services/data.service';
 import * as JSZip from 'jszip';
+import { SharedService } from '../services/SharedService';
 
 
 @Component({
@@ -16,6 +17,7 @@ import * as JSZip from 'jszip';
 export class Tab3Page {
 
   constructor(
+    private sharedService: SharedService,
     private modalController: ModalController,
     public authService: AuthService,
     private dataService: DataService,

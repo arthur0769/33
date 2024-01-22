@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
+import { SharedService } from '../services/SharedService';
 
 @Component({
   selector: 'app-login-modal',
@@ -12,6 +13,7 @@ export class LoginModalComponent implements OnInit {
   credentials: FormGroup;
 
   constructor(
+    private sharedService: SharedService,
     private fb: FormBuilder,
     private modalController: ModalController,
     private loadingController: LoadingController,
@@ -41,6 +43,8 @@ export class LoginModalComponent implements OnInit {
     const user = await this.authService.register(this.credentials.value);
     await loading.dismiss();
 
+    this.sharedService.refreshCards();
+
     if (user) {
       this.dismissModal();
       // Faça alguma ação após o registro, se necessário
@@ -55,6 +59,8 @@ export class LoginModalComponent implements OnInit {
 
     const user = await this.authService.login(this.credentials.value);
     await loading.dismiss();
+
+    this.sharedService.refreshCards();
 
     if (user) {
       this.dismissModal();
@@ -120,6 +126,7 @@ export class LoginModalComponent implements OnInit {
 
   dismissModal() {
     this.modalController.dismiss();
+    this.sharedService.refreshCards();
   }
 
 

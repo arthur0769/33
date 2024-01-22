@@ -58,12 +58,14 @@ export class Tab2Page implements OnDestroy {
   ngOnDestroy() {
     if (this.uidSubscription) {
       this.uidSubscription.unsubscribe();
+      this.refreshCards();
     }
   }
 
   refreshCards() {
     this.dataService.getCardsHoje(this.assunto).subscribe((cards: { id: string; data: Cards; assunto: string }[]) => {
       this.cardsEstudar = [...cards];
+      // console.log('atualizou');
       if (this.cardsEstudar.length > 0) {
         this.currentIndex = 0;
       }
