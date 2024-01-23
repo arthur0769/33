@@ -7,6 +7,8 @@ import { ModalController } from '@ionic/angular';
 import { CloudModalComponent } from '../cloud-modal/cloud-modal.component';
 import { Renderer2 } from '@angular/core';
 import { AssuntoService } from '../services/assunto.service';
+import { TabsPage } from '../tabs/tabs.page';
+import { observable } from 'rxjs';
 
 @Component({
   selector: 'app-tab1',
@@ -15,9 +17,13 @@ import { AssuntoService } from '../services/assunto.service';
 })
 
 export class Tab1Page {
+  public cardsEstudar: any[] = [];
+  public currentIndex = 0;
   profile = null;
   pergunta: string;
   resposta: string;
+  hidenSkeleton = false;
+
 
   private _assunto: string = "geral";
   cards: { editando: boolean; assunto: string; id?: string | undefined; uid?: string | null | undefined; pergunta: string; resposta: string; data: string; }[];
@@ -40,10 +46,36 @@ export class Tab1Page {
     private router: Router,
     private route: ActivatedRoute,
     private renderer: Renderer2,
-    private assuntoService: AssuntoService
-  ) {}
+    private assuntoService: AssuntoService,
+    private tabs: TabsPage,
+  ) {
 
+      this.hidenSkeleton = tabs.hidenSkeleton;
+
+      this.navigateToTab2()
+
+
+  }
+   
+
+  navigateToTab2() {
+
+    this.dataService.getCardsHoje(this.assunto).subscribe((cards: { id: string; data: Cards; assunto: string }[]) => {
+      this.cardsEstudar = [...cards];
+      console.log(this.cardsEstudar);
+      if (this.cardsEstudar.length > 0) {
+        this.currentIndex = 0;
+      };})
+
+    if(this.cardsEstudar.length > 1){
+    const route = 'tabs/tab2';
+    this.router.navigate([route]);
+    }
+
+
+}
   
+
 
 
   async addCards() {

@@ -7,6 +7,15 @@ import { Component } from '@angular/core';
 })
 export class TabsPage {
 
-  constructor() {}
+  hidenSkeleton = false;
+
+  constructor(
+  ) {
+
+    setTimeout(() => {
+      this.hidenSkeleton = true;
+   }, 1500);
+    
+  }
 
 }

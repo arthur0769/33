@@ -1,14 +1,15 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar *ngIf="hidenSkeleton">
     <ion-title>
       Criar
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content *ngIf="hidenSkeleton" [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar class="title-with-icon">
+
       <ion-title size="large">Criar</ion-title>
       
         <ion-buttons slot="end">
@@ -19,16 +20,20 @@
         </ion-buttons>
 
 
-
-        
+  
     </ion-toolbar>
+ 
   </ion-header>
+
+
 
   <ion-list class="assunto">
 
     <ion-item>
-      <b> <ion-label position="floating">Assunto</ion-label> </b>
       
+      
+      <b> <ion-label position="floating">Assunto</ion-label> </b>
+
       <ion-select placeholder="Assunto do card" interface="popover" [(ngModel)]="assunto" (ionChange)="updateAssunto(assunto)">
         <ion-select-option value="geral">Conhecimentos gerais</ion-select-option>
         <ion-select-option value="ingles">Ingles</ion-select-option>
@@ -47,13 +52,12 @@
 </ion-content>
 
 
-
-
-<ion-card class="card-container">
+<ion-card *ngIf="hidenSkeleton" class="card-container">
 
 
     
   <ion-card-header>
+
     <ion-card-title>Nova carta</ion-card-title>
 
   </ion-card-header>
@@ -73,3 +77,76 @@
   </ion-card-content>
 </ion-card>
 
+
+<!--skeleton-->
+
+
+<ion-header [translucent]="true">
+  
+  <ion-toolbar *ngIf="!hidenSkeleton" class="visibility">
+    <ion-title>
+      Criar
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!hidenSkeleton" [fullscreen]="true">
+  <ion-header collapse="condense">
+
+
+    
+    <ion-toolbar class="title-with-icon">
+
+      <ion-title size="large"><ion-skeleton-text animated style="width: 100%;"></ion-skeleton-text></ion-title>
+
+
+  
+    </ion-toolbar>
+ 
+  </ion-header>
+
+
+  <ion-list class="assunto">
+
+    <ion-item>
+      
+      
+      <ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text>
+
+    </ion-item>
+    
+  
+  
+  </ion-list>
+
+
+  
+
+
+</ion-content>
+
+
+<ion-card *ngIf="!hidenSkeleton" class="card-container">
+
+
+    
+  <ion-card-header>
+
+    <ion-card-title><ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text></ion-card-title>
+
+  </ion-card-header>
+
+
+  <ion-card-content>
+
+    
+    <ion-input><ion-skeleton-text animated style="width: 10%;"></ion-skeleton-text></ion-input>
+    <ion-input><ion-skeleton-text animated style="width: 10%;"></ion-skeleton-text></ion-input>
+
+    <ion-button (click)="addCards()" [disabled]="true">
+      <strong>Adicionar</strong>
+    </ion-button>
+    
+
+  </ion-card-content>
+</ion-card>
