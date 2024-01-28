@@ -3,7 +3,7 @@ import { Firestore, collectionData, addDoc, setDoc, doc, getDocs, getDoc, delete
 import { DocumentSnapshot, and, collection } from "firebase/firestore";
 import { query, where } from 'firebase/firestore';
 import { map, retry } from 'rxjs/operators';
-import { Observable, from } from "rxjs";
+import { Observable, from, observable } from "rxjs";
 import { AuthService } from './auth.service';
 import { of } from 'rxjs';
 
@@ -22,63 +22,6 @@ export interface Cards {
 })
 export class DataService {
 
-
-    
-
-
-    importarCardsDoAnki(arquivo: File): Promise<void> {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-    
-          reader.onload = (event) => {
-            try {
-              const conteudo: string = (event.target as FileReader).result as string;
-              const cardsDoAnki: any[] = JSON.parse(conteudo);
-    
-              if (Array.isArray(cardsDoAnki)) {
-                // Mapeie os dados do Anki para o formato do seu aplicativo, por exemplo:
-                const cardsFormatados: Cards[] = cardsDoAnki.map(cardAnki => {
-                  return {
-                    editando: false,
-                    assunto: cardAnki.assunto,
-                    pergunta: cardAnki.pergunta,
-                    resposta: cardAnki.resposta,
-                    data: this.convertDateToString(new Date()) // Adapte conforme necessário
-                    // ... outros campos ou lógica conforme necessário
-                  };
-                });
-    
-                // Adicione os cards formatados ao Firebase ou onde você armazena os dados
-                cardsFormatados.forEach(card => {
-                  this.addCards(card).then(() => {
-                    console.log("Card do Anki importado com sucesso!");
-                  });
-                });
-    
-                resolve();
-              } else {
-                reject(new Error("Arquivo do Anki inválido."));
-              }
-            } catch (error) {
-              reject(error);
-            }
-          };
-    
-          reader.readAsText(arquivo);
-        });
-      }
-
-
-
-
-
-
-
-
-
-
-
-
     atualizarCard(card: Cards): Promise<void> {
         const { id, ...cardData } = card; // Removendo a propriedade 'id' da card
         
@@ -92,7 +35,10 @@ export class DataService {
     
     db: any;
 
-    constructor(private firestore: Firestore, private authService: AuthService) {
+    constructor(
+      private firestore: Firestore, 
+      private authService: AuthService,
+      ) {
         this.db = firestore;
 
         this.authService.uidChanged.subscribe((uid) => {
@@ -101,6 +47,56 @@ export class DataService {
             }
         });
     }
+
+
+
+    importarCardsDoAnki(arquivo: File): Promise<void> {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+  
+        reader.onload = (event) => {
+          try {
+            const conteudo: string = (event.target as FileReader).result as string;
+            const cardsDoAnki: any[] = JSON.parse(conteudo);
+  
+            if (Array.isArray(cardsDoAnki)) {
+              // Mapeie os dados do Anki para o formato do seu aplicativo, por exemplo:
+              const cardsFormatados: Cards[] = cardsDoAnki.map(cardAnki => {
+                return {
+                  editando: false,
+                  assunto: cardAnki.assunto,
+                  pergunta: cardAnki.pergunta,
+                  resposta: cardAnki.resposta,
+                  data: this.convertDateToString(new Date()) // Adapte conforme necessário
+                  // ... outros campos ou lógica conforme necessário
+                };
+              });
+  
+              // Adicione os cards formatados ao Firebase ou onde você armazena os dados
+              cardsFormatados.forEach(card => {
+                this.addCards(card).then(() => {
+                  console.log("Card do Anki importado com sucesso!");
+                });
+              });
+  
+              resolve();
+            } else {
+              reject(new Error("Arquivo do Anki inválido."));
+            }
+          } catch (error) {
+            reject(error);
+          }
+        };
+  
+        reader.readAsText(arquivo);
+      });
+    }
+
+
+
+
+
+
 
     isValidISODate(str: string) {
       const regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;

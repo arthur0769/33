@@ -7,6 +7,7 @@ import { EditarModalComponent } from './editar-modal.component';
 import { DataService } from '../services/data.service';
 import * as JSZip from 'jszip';
 import { SharedService } from '../services/SharedService';
+import { AssuntoService } from '../services/assunto.service';
 
 
 @Component({
@@ -17,6 +18,7 @@ import { SharedService } from '../services/SharedService';
 export class Tab3Page {
 
   constructor(
+    private assunto: AssuntoService,
     private sharedService: SharedService,
     private modalController: ModalController,
     public authService: AuthService,
@@ -57,6 +59,12 @@ export class Tab3Page {
       const leitor = new FileReader();
   
       leitor.onload = async (e) => {
+
+        let assuntoAtual = 'geral'
+        this.assunto.getAssunto().subscribe(assunto => {
+            assuntoAtual = assunto
+        });
+
         try {
           const conteudo: string = leitor.result as string;
           const linhas: string[] = conteudo.split('\n');
@@ -64,16 +72,14 @@ export class Tab3Page {
           for (const linha of linhas) {
             const [pergunta, resposta] = linha.split('\t');
             if (pergunta && resposta) {
-              // Construa o objeto de card conforme o formato do seu banco de dados
               const novoCard = {
                 pergunta: pergunta.trim(),
                 resposta: resposta.trim(),
-                assunto: 'geral', // Valor padrão para assunto
+                assunto: assuntoAtual,
                 data: new Date().toISOString(),
                 editando: false
               };
-  
-              // Agora você pode adicionar `novoCard` ao seu banco de dados
+
               this.dataService.addCards(novoCard)
                 .then(() => {
                   console.log("Novo card importado com sucesso!");
