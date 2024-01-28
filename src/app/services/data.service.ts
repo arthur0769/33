@@ -246,7 +246,7 @@ export class DataService {
     if (this.authService.uid) {
       cards.uid = this.authService.uid;
       return this.getCardCountByUser(this.authService.uid).then((count) => {
-        if (count < 10) {
+        if (count < 100000) { //valor limite simbolico, para utilização posterior
           const cardsRef = collection(this.firestore, 'cards');
           return addDoc(cardsRef, cards).then(() => {
             console.log("Card adicionado em:", this.formatTimestampToReadableDate(cards.data));
