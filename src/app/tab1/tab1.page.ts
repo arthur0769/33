@@ -8,7 +8,6 @@ import { CloudModalComponent } from '../cloud-modal/cloud-modal.component';
 import { Renderer2 } from '@angular/core';
 import { AssuntoService } from '../services/assunto.service';
 import { TabsPage } from '../tabs/tabs.page';
-import { observable } from 'rxjs';
 
 @Component({
   selector: 'app-tab1',
@@ -51,30 +50,9 @@ export class Tab1Page {
   ) {
 
       this.hidenSkeleton = tabs.hidenSkeleton;
-
-      this.navigateToTab2()
-
-
+      
   }
    
-
-  navigateToTab2() {
-
-    this.dataService.getCardsHoje(this.assunto).subscribe((cards: { id: string; data: Cards; assunto: string }[]) => {
-      this.cardsEstudar = [...cards];
-      console.log(this.cardsEstudar);
-      if (this.cardsEstudar.length > 0) {
-        this.currentIndex = 0;
-      };})
-
-    if(this.cardsEstudar.length > 1){
-    const route = 'tabs/tab2';
-    this.router.navigate([route]);
-    }
-
-
-}
-  
 
 
 
