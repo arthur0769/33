@@ -166,7 +166,6 @@ export class DataService {
         const queryRef = query(
           cardsRef,
           where('uid', '==', id),
-          where('data', '>=', inicioDoDiaISO),
           where('data', '<', fimDoDiaISO),
           where('assunto', '==', assunto)
         );
@@ -179,7 +178,7 @@ export class DataService {
         // Filtrar os cartões locais por data e assunto
         const cartoesFiltrados = localCards.filter((card: Cards) => {
           const cardDate = new Date(card.data);
-          return cardDate >= inicioDoDia && cardDate < fimDoDia && card.assunto === assunto;
+          return cardDate < fimDoDia && card.assunto === assunto;
         });
         
         // Mapear os cartões filtrados para retornar com ID, dados e assunto
@@ -287,10 +286,13 @@ private syncLocalCardsWithFirebase() {
   
 
     updateCardData(id: string, oldData: string, dias: number): Observable<any> {
+
+      const isoDate = this.convertDateToString(new Date()); // Obtém a data atual no formato ISO 8601 - não utilizando oldData
+
       if (!this.isValidISODate(oldData)) {
         throw new Error('Invalid ISO date');
       }
-      const cardDate = this.timestampToDate(oldData); // Converte a string ISO 8601 para objeto Date
+      const cardDate = this.timestampToDate(isoDate); // Converte a string ISO 8601 para objeto Date
     
       cardDate.setDate(cardDate.getDate() + dias);
     
@@ -315,12 +317,14 @@ private syncLocalCardsWithFirebase() {
     }
     
     updateLocalCardData(id: string, oldData: any, dias: number): void {
+
+      const isoDate = this.convertDateToString(new Date()); // Obtém a data atual no formato ISO 8601 - não utilizando oldData
       
       let localCards = JSON.parse(localStorage.getItem('localCards') || '[]');
       const cardIndex = localCards.findIndex((card: { id: string }) => card.id === id);
     
       if (cardIndex !== -1) {
-        const cardDate = this.timestampToDate(oldData.data);
+        const cardDate = this.timestampToDate(isoDate);
         console.log(cardDate)
         cardDate.setDate(cardDate.getDate() + dias);
         const formattedDate = this.convertDateToString(cardDate);
