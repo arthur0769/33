@@ -125,10 +125,10 @@ export class DataService {
       );
      }
       
-
      convertDateToString(date: Date): string {
+      date.setHours(date.getHours() -  3);
       return date.toISOString();
-    }    
+    }
 
       timestampToDate(isoDate: string): Date {
       return new Date(isoDate);

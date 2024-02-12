@@ -216,7 +216,20 @@ export class Tab2Page implements OnDestroy {
     this.updateIconOpacity('reject-icon', 0);
     this.updateIconOpacity('accept-icon', 0);
   }
-  
+
+  adicionar7Dias() {
+    const currentCard = this.cardsEstudar[this.currentIndex];
+    if (currentCard) {
+      if (this.authService.uid) {
+        this.dataService.updateCardData(currentCard.id, currentCard.data, 7).subscribe(() => {
+          this.refreshCards();
+        });
+      } else {
+        this.dataService.updateLocalCardData(currentCard.id, currentCard.data, 7);
+        this.refreshCards();
+      }
+    }
+  }
 
   adicionar5Dias() {
     const currentCard = this.cardsEstudar[this.currentIndex];
