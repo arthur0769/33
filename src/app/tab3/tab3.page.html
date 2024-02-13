@@ -37,14 +37,13 @@
     </ion-label>
   </ion-item>
 
-  <ion-item button detail="false">
+  <ion-item button detail="false" class="desktop-only">
     <ion-label>
       <h2>Importar Cards</h2>
       <input type="file" id="file-input" (change)="onFileSelected($event)" style="position: absolute; opacity:  0; width:  100%; height:  100%; cursor: pointer;">
       <p>Importe suas cards do Anki</p>
     </ion-label>
   </ion-item>
-  
 
   <ion-item id="sair" button detail="false" detail-icon="caret-forward-outline" *ngIf="authService.uid" (click)="logout()">
     <ion-label>
