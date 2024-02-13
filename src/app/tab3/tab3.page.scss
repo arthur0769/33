@@ -14,3 +14,10 @@
 #sair{
     color: red;
 }
+
+#file-input {
+    z-index:  999; /* Para garantir que o input esteja acima de outros elementos */
+    top:  0;
+    left:  0;
+  }
+  

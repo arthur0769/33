@@ -36,23 +36,15 @@
       <p>edite aqui suas cards</p>
     </ion-label>
   </ion-item>
-  
+
   <ion-item button detail="false">
     <ion-label>
-      
-      <h2 (click)="importarCards()">Importar Cards</h2>
-      <input type="file" (change)="onFileSelected($event)">
-      <p>importe suas cards do Anki</p>
+      <h2>Importar Cards</h2>
+      <input type="file" id="file-input" (change)="onFileSelected($event)" style="position: absolute; opacity:  0; width:  100%; height:  100%; cursor: pointer;">
+      <p>Importe suas cards do Anki</p>
     </ion-label>
   </ion-item>
   
-  <ion-item button detail="true" detail-icon="caret-forward-outline">
-    <ion-label>
-      <h2>opcao 4</h2>
-      <p>texto</p>
-      <p>texto</p>
-    </ion-label>
-  </ion-item>
 
   <ion-item id="sair" button detail="false" detail-icon="caret-forward-outline" *ngIf="authService.uid" (click)="logout()">
     <ion-label>
